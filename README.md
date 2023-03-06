@@ -1,5 +1,8 @@
 # Installation
-- clone projek ini (git clone https://github.com/zamura48/sewa-lapangan.git)
+- clone projek ini
+```clone
+git clone https://github.com/zamura48/sewa-lapangan.git
+```
 - jalankan perintah ini di git bash/vscode terminal
 ```cpenv
 cp env .env
