@@ -10,8 +10,8 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        $model = new User();
-        $model->save([
+        $modelUser = new User();
+        $modelUser->save([
             'role' => "Admin",
             'username' => "admin",
             'email' => "admin@admin.com",
