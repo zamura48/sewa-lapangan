@@ -3,17 +3,19 @@
 ```clone
 git clone https://github.com/zamura48/sewa-lapangan.git
 ```
+
 - jalankan perintah ini di git bash/vscode terminal
 ```cpenv
 cp env .env
 ```
+
 - jalankan perintah ini di git bash/vscode terminal
 ```composerupdate
 composer update
 ```
+
 - buat database dengan nama "sewa-lapangan" (atau dengan nama yang lain)
-- buka file .env pada projek ini
-- hilangkan comment pada bagian database, kemudian isi dengan konfigurasi database (atau bisa mengikuti contoh dibawah ini)
+- buka file .env pada projek ini, hilangkan comment pada bagian database, kemudian isi dengan konfigurasi database (atau bisa mengikuti contoh dibawah ini)
 ```env
 #--------------------------------------------------------------------
 # DATABASE
@@ -40,8 +42,14 @@ database.tests.port = 3306
 ```migrate
 php spark migrate
 ```
+
 - jalankan perintah ini di git bash/vscode terminal
 ```seed
 php spark db:seed
 ```
+
 - setelah menjalankan db:seed, akan muncul seeder name isi dengan UserSeeder
+- jika sudah melakukan langkah-langkah di atas jalankan projek ini
+```serve
+php spark serve
+```
