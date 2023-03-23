@@ -13,6 +13,8 @@ class DashboardController extends BaseController
 
     public function pelangganIndex()
     {
-        return view('pelanggan/dashboard/index');
+        return view('pelanggan/pesanlapangan/index', [
+            'title' => " | Pesan Lapangan"
+        ]);
     }
 }

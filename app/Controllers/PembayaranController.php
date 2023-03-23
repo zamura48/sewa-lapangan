@@ -10,4 +10,9 @@ class PembayaranController extends BaseController
     {
         //
     }
+
+    public function postPembayaran()
+    {
+        // $kodePembayaran = "KP"
+    }
 }

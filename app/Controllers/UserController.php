@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\Pelanggan;
 use App\Models\User;
 
 class UserController extends BaseController
@@ -21,5 +22,20 @@ class UserController extends BaseController
         return view('');
     }
 
+    public function profil()
+    {
+        return view('pelanggan/profil/index', [
+            'title' => ' | Profil',
+            'data' => $this->model->getProfile(session('username'))
+        ]);
+    }
+
+    public function updateProfil()
+    {
+        $modelUser = $this->model;
+        $modelPelanggan = new Pelanggan();
+
+        
+    }
     
 }

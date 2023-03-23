@@ -29,67 +29,124 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
-$routes->get('/login', 'Auth\AuthController::login');
-$routes->post('/login', 'Auth\AuthController::postLogin');
-$routes->get('logout', 'Auth\AuthController::logout');
-$routes->get('/register', 'Auth\AuthController::register');
-$routes->post('/register', 'Auth\AuthController::postRegister');
+$routes->group('', ['filter' => 'guestFilter'], function ($routes) {
+    $routes->get('/', 'LandingPageController::index');
+    $routes->get('/login', 'Auth\AuthController::login');
+    $routes->post('/login', 'Auth\AuthController::postLogin');
+    $routes->get('logout', 'Auth\AuthController::logout');
+    $routes->get('/register', 'Auth\AuthController::register');
+    $routes->post('/register', 'Auth\AuthController::postRegister');
+});
 
-$routes->group('', ['filter' => 'authFilter'], function($routes) {
-    $routes->group('admin', ['filter' => 'adminFilter'], static function ($routes) {
-        $routes->group('dashboard', static function($routes) {
-            $routes->get('', 'DashboardController::adminIndex');
-        });
+$routes->group('', ['filter' => 'authFilter'], function ($routes) {
+    $routes->group(
+        'admin',
+        ['filter' => 'adminFilter'],
+        function ($routes) {
+            $routes->group(
+                'dashboard',
+                function ($routes) {
+                        $routes->get('', 'DashboardController::adminIndex');
+                    }
+            );
 
-        $routes->group('pelanggan', static function ($routes) {
-            $routes->get('/', 'PelangganController::index');
-            $routes->post('', 'PelangganController::store');
-            $routes->get('edit/(:any)', 'PelangganController::edit/$1');
-            $routes->post('update/(:any)', 'PelangganController::update/$1');
-            $routes->get('delete/(:any)', 'PelangganController::destroy/$1');
-        }
-        );
-    
-        $routes->group('lapangan', static function ($routes) {
-            $routes->get('/', 'LapanganController::index');
-            $routes->post('/', 'LapanganController::store');
-            $routes->post('update/(:any)', 'LapanganController::update/$1');
-            $routes->get('delete/(:any)', 'LapanganController::destroy/$1');
-        }
-        );
-    
-        $routes->group('jadwal', static function ($routes) {
-            $routes->get('/', 'JadwalController::index');
-            $routes->post('/', 'JadwalController::store');
-            $routes->post('update/(:any)', 'JadwalController::update/$1');
-            $routes->get('delete/(:any)', 'JadwalController::destroy/$1');
-        }
-        );
-    
-        $routes->group('jam', static function ($routes) {
-            $routes->get('/', 'JamController::index');
-            $routes->post('/', 'JamController::store');
-            $routes->post('update/(:any)', 'JamController::update/$1');
-            $routes->get('delete/(:any)', 'JamController::destroy/$1');
-        }
-        );
-    });
-    
-    $routes->group('pelanggan', ['filter' => 'pelangganFilter'], function ($routes) {
-        $routes->group('dashboard', static function($routes) {
-            $routes->get('', 'DashboardController::pelangganIndex');
-        });
+            $routes->group(
+                'pelanggan',
+                function ($routes) {
+                        $routes->get('/', 'PelangganController::index');
+                        $routes->post('', 'PelangganController::store');
+                        $routes->get('edit/(:any)', 'PelangganController::edit/$1');
+                        $routes->post('update/(:any)', 'PelangganController::update/$1');
+                        $routes->get('delete/(:any)', 'PelangganController::destroy/$1');
+                    }
+            );
 
-        $routes->group('jadwal', function($routes) {
-            $routes->get('/', 'JadwalController::indexJadwal');
-        });
-    
-        $routes->group('booking', function($routes) {
-            $routes->get('/', 'BookingController::index');
-            $routes->post('/', 'BookingController::store');
-        });
-    });
+            $routes->group(
+                'lapangan',
+                function ($routes) {
+                        $routes->get('/', 'LapanganController::index');
+                        $routes->post('/', 'LapanganController::store');
+                        $routes->post('update/(:any)', 'LapanganController::update/$1');
+                        $routes->get('delete/(:any)', 'LapanganController::destroy/$1');
+                    }
+            );
+
+            $routes->group(
+                'jadwal',
+                function ($routes) {
+                        $routes->get('/', 'JadwalController::index');
+                        $routes->post('/', 'JadwalController::store');
+                        $routes->post('update/(:any)', 'JadwalController::update/$1');
+                        $routes->get('delete/(:any)', 'JadwalController::destroy/$1');
+                    }
+            );
+
+            $routes->group(
+                'jam',
+                function ($routes) {
+                        $routes->get('/', 'JamController::index');
+                        $routes->post('/', 'JamController::store');
+                        $routes->post('update/(:any)', 'JamController::update/$1');
+                        $routes->get('delete/(:any)', 'JamController::destroy/$1');
+                    }
+            );
+
+            $routes->group(
+                'pesanan',
+                function ($routes) {
+                        $routes->get('/', 'PesananController::index');
+                    }
+            );
+        }
+    );
+
+    $routes->group(
+        'pelanggan',
+        ['filter' => 'pelangganFilter'],
+        function ($routes) {
+            $routes->addRedirect('/', 'pelanggan/pesan-lapangan');
+
+            $routes->group(
+                'pesan-lapangan',
+                function ($routes) {
+                        $routes->get('', 'DashboardController::pelangganIndex');
+                    }
+            );
+
+            $routes->group(
+                'jadwal',
+                function ($routes) {
+                        $routes->get('/', 'JadwalController::indexJadwal');
+                    }
+            );
+
+            $routes->group('keranjang', function ($routes) {
+                $routes->get('/', 'BookingController::getKeranjangUser');
+                $routes->post('checkout', 'BookingController::postCheckOut');
+            });
+
+            // $routes->group(
+            //     'booking',
+            //     function ($routes) {
+            //             $routes->get('/', 'BookingController::index');
+            //             $routes->post('/', 'BookingController::store');
+            //             $routes->get('(:any)', 'BookingController::getCheckout/$1');
+            //         }
+            // );
+
+            $routes->group(
+                'pesan-lapangan',
+                function ($routes) {
+                        $routes->post('/', 'JadwalController::getLapanganExist');
+                    }
+            );
+
+            $routes->group('profil', function ($routes) {
+                $routes->get('(:any)', 'UserController::profil');
+                $routes->post('/', 'UserController::updateProfil');
+            });
+        }
+    );
 });
 
 /*

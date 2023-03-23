@@ -106,4 +106,6 @@ class LapanganController extends BaseController
         
         return redirect()->to(base_url('admin/lapangan'))->with('success', "Berhasil menghapus data lapangan");
     }
+
+    
 }

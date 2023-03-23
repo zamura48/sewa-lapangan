@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Login</title>
+    <title>LapanganKu <?= $title ?></title>
 
     <!-- Custom fonts for this template-->
     <link href="<?= base_url('sb-admin/vendor/fontawesome-free/css/all.min.css') ?>" rel="stylesheet" type="text/css">
@@ -26,7 +26,7 @@
 
     <div class="container">
 
-    <?= $this->renderSection('content')?>
+        <?= $this->renderSection('content') ?>
 
     </div>
 

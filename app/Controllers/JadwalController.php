@@ -91,4 +91,17 @@ class JadwalController extends BaseController
             'datas' => $this->model->getJadwalWithLapanganAndJams()
         ]);
     }
+
+    // Pelanggan Method
+    public function getLapanganExist()
+    {
+        $tanggal = $this->request->getVar('tanggal');
+        $jamMulai = $this->request->getVar('jamMulai');
+        $jamAkhir = $this->request->getVar('jamAkhir');
+
+        return view('pelanggan/pesanlapangan/index', [
+            'title' => ' | Pesan Lapangan',
+            'datas' => $this->model->getJadwalLapanganExit($tanggal, $jamMulai, $jamAkhir)
+        ]);
+    }
 }

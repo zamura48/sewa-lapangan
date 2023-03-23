@@ -1,6 +1,6 @@
 <?php foreach ($datas as $data) { ?>
     <div style="margin-top: 3em;">
-        <img src="<?= base_url('/uploads/image/lapangan/'.$data['gambar']) ?>" alt="" width="30%" height="30%">
+        <img src="<?= base_url('/uploads/image/lapangan/' . $data['gambar']) ?>" alt="" width="30%" height="30%">
         <br>
         <label for="">
             <?= $data['nomor'] ?>
@@ -14,7 +14,7 @@
         </h4>
         <?php if ($data['status_booking'] !== '1') { ?>
             <h5>Booking Available</h5>
-            <button>Booking</button>
+            <a href="<?= base_url('pelanggan/booking/'.$data['jadwal_id']) ?>">Booking</a>
         <?php } ?>
         <b></b>
     </div>

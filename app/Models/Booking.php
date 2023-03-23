@@ -57,4 +57,41 @@ class Booking extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getDataPesanans()
+    {
+        $result = $this->join('pelanggans', 'bookings.id_pelanggan = pelanggans.pelanggan_id')
+        ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
+        ->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
+        ->join('jams', 'jadwals.id_jam = jams.jam_id')
+        ->select('pelanggans.nama, jams.jam, lapangans.nomor, lapangans.gambar, lapangans.status, jadwals.tanggal, jadwals.harga')
+        ->find();
+
+        return $result;
+    }
+
+    public function getDataPesananUser($idUser)
+    {
+        $result = $this->join('pelanggans', 'bookings.id_pelanggan = pelanggans.pelanggan_id')
+        ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
+        ->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
+        ->join('jams', 'jadwals.id_jam = jams.jam_id')
+        ->join('users', 'pelanggans.id_user = users.user_id')
+        ->select('bookings.booking_id, pelanggans.nama, jams.jam, lapangans.nomor, lapangans.gambar, lapangans.status, jadwals.tanggal, jadwals.harga')
+        ->where('users.user_id', $idUser)
+        ->find();
+
+        return $result;
+    }
+
+    public function getDataPesanan($idBooking)
+    {
+        $result = $this->join('pelanggans', 'bookings.id_pelanggan = pelanggans.pelanggan_id')
+        ->join('users', 'pelanggans.id_user = users.user_id')
+        ->select('bookings.booking_id, pelanggans.nama, users.email, pelanggans.noHp, bookings.harga, bookings.subtotal')
+        ->where('bookings.booking_id', $idBooking)
+        ->first();
+
+        return $result;
+    }
 }

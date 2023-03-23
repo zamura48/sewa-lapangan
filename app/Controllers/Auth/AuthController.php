@@ -12,7 +12,9 @@ class AuthController extends BaseController
 {
     public function login()
     {
-        return view('auth/login');
+        return view('auth/login', [
+            'title' => " | Login"
+        ]);
     }
 
     public function postLogin()
@@ -31,8 +33,14 @@ class AuthController extends BaseController
                 $session->set('username', $dataUser['username']);
                 $session->set('role', $dataUser['role']);
                 $session->set('id', base64_encode($dataUser['user_id']));
+
+                if ($dataUser['role'] === 'admin') {
+                    $linkRedirect = 'admin/dashboard';
+                } else {
+                    $linkRedirect = 'pelanggan/pesan-lapangan';
+                }
                 
-                return redirect()->to(base_url(strtolower($dataUser['role']).'/dashboard'));
+                return redirect()->to(base_url($linkRedirect));
             }
         } else {
             return redirect()->to(base_url('/login'))->with('errors', "Username/Email atau Password tidak cocok");
@@ -49,7 +57,9 @@ class AuthController extends BaseController
 
     public function register()
     {
-        return view('auth/register');
+        return view('auth/register', [
+            'title' => " | Registrasi"
+        ]);
     }
 
     public function postRegister()

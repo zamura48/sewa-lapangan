@@ -66,7 +66,32 @@ class Jadwal extends Model
     {
         $result = $this->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
             ->join('jams', 'jadwals.id_jam = jams.jam_id')
-            ->select('jams.jam, lapangans.nomor, lapangans.gambar, lapangans.status, jadwals.tanggal, jadwals.harga, jadwals.status_booking')
+            ->select('jadwals.jadwal_id, jams.jam, lapangans.nomor, lapangans.gambar, lapangans.status, jadwals.tanggal, jadwals.harga, jadwals.status_booking')
+            ->orderBy('jadwals.status_booking', 'asc')
+            ->find();
+
+        return $result;
+    }
+
+    public function getJadwalWithLapanganAndJam($id)
+    {
+        $result = $this->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
+            ->join('jams', 'jadwals.id_jam = jams.jam_id')
+            ->select('jadwals.jadwal_id, jams.jam, lapangans.nomor, lapangans.gambar, lapangans.status, jadwals.tanggal, jadwals.harga, jadwals.status_booking')
+            ->where('jadwals.jadwal_id', $id)
+            ->orderBy('jadwals.status_booking', 'asc')
+            ->first();
+
+        return $result;
+    }
+
+    public function getJadwalLapanganExit($tanggal, $jamMulai, $jamAkhir)
+    {
+        $result = $this->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
+            ->join('jams', 'jadwals.id_jam = jams.jam_id')
+            ->select('jadwals.jadwal_id, jams.jam, lapangans.nomor, lapangans.gambar, lapangans.status, jadwals.tanggal, jadwals.harga, jadwals.status_booking')
+            ->where('jadwals.tanggal', $tanggal)
+            ->where('jams.jam Between "'.$jamMulai.'" and "'. $jamAkhir. '"')
             ->orderBy('jadwals.status_booking', 'asc')
             ->find();
 
