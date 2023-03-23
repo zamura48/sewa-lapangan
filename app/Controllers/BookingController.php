@@ -7,6 +7,8 @@ use App\Models\Booking;
 use App\Models\Jadwal;
 use App\Models\Pembayaran;
 use App\Models\User;
+use CodeIgniter\Pager\Exceptions\PagerException;
+use CodeIgniter\Router\Exceptions\RedirectException;
 use Midtrans\Config;
 use Midtrans\Snap;
 
@@ -39,14 +41,19 @@ class BookingController extends BaseController
 
     }
 
-    // public function getCheckout($id)
-    // {
-    //     $modelJadwal = new Jadwal();
+    public function deleteKeranjangUser($id)
+    {
+        $modelUser = new User();
+        $modelPelanggan = $this->model->where('booking_id', $id)->first();
+        
+        if ($modelUser->getIdPelanggan(session('username')) === $modelPelanggan['id_pelanggan']) {
+            $this->model->where('booking_id', $id)->delete();
+        } else {
+            throw new RedirectException(base_url('pelanggan/keranjang'), 403);
+        }
 
-    //     return view('pelanggan/booking/checkout', [
-    //         'data' => $modelJadwal->getJadwalWithLapanganAndJam($id)
-    //     ]);
-    // }
+        return redirect()->to(base_url('pelanggan/keranjang'))->with('success', 'Berhasil menghapus item.');
+    }
 
     public function postCheckOut()
     {

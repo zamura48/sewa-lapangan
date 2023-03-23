@@ -113,15 +113,16 @@ $routes->group('', ['filter' => 'authFilter'], function ($routes) {
                     }
             );
 
-            $routes->group(
-                'jadwal',
-                function ($routes) {
-                        $routes->get('/', 'JadwalController::indexJadwal');
-                    }
-            );
+            // $routes->group(
+            //     'jadwal',
+            //     function ($routes) {
+            //             $routes->get('/', 'JadwalController::indexJadwal');
+            //         }
+            // );
 
             $routes->group('keranjang', function ($routes) {
                 $routes->get('/', 'BookingController::getKeranjangUser');
+                $routes->get('(:any)', 'BookingController::deleteKeranjangUser/$1');
                 $routes->post('checkout', 'BookingController::postCheckOut');
             });
 
@@ -133,7 +134,7 @@ $routes->group('', ['filter' => 'authFilter'], function ($routes) {
             //             $routes->get('(:any)', 'BookingController::getCheckout/$1');
             //         }
             // );
-
+    
             $routes->group(
                 'pesan-lapangan',
                 function ($routes) {

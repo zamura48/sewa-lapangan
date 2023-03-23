@@ -69,6 +69,16 @@ class User extends Model
         return $result;
     }
 
+    public function getIdPelanggan($username)
+    {
+        $result = $this->join('pelanggans', 'users.user_id = pelanggans.id_user')
+            ->select('pelanggans.pelanggan_id')
+            ->where('username', $username)
+            ->first();
+
+        return $result['pelanggan_id'];
+    }
+
     public function getIdUser($username)
     {
         $result = $this->where('username', $username)->first();
