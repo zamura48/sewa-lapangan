@@ -49,4 +49,14 @@ class Lapangan extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getLapanganExist()
+    {
+        $result = $this->select('lapangans.lapangan_id, lapangans.nomor, lapangans.harga, lapangans.gambar')
+        ->where('lapangans.status', 0)
+        ->orderBy('lapangans.nomor', 'asc')
+        ->find();
+
+        return $result;
+    }
 }

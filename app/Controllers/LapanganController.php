@@ -22,7 +22,6 @@ class LapanganController extends BaseController
 
     public function store()
     {
-        // $this->model->setValidationRule('gambar', 'required|uploaded[gambar]|max_size[gambar,1024]|ext_in[gambar,png,jpg,jpeg]');
         $validationRules = $this->model->getValidationRules();
         $validationMessages = $this->model->getValidationMessages();
         

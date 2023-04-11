@@ -8,7 +8,7 @@ class Jadwal extends Model
 {
     protected $DBGroup = 'default';
     protected $table = 'jadwals';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'jadwal_id';
     protected $useAutoIncrement = true;
     // protected $insertID         = 0;
     protected $returnType = 'array';
@@ -92,9 +92,34 @@ class Jadwal extends Model
             ->select('jadwals.jadwal_id, jams.jam, lapangans.nomor, lapangans.gambar, lapangans.status, jadwals.tanggal, jadwals.harga, jadwals.status_booking')
             ->where('jadwals.tanggal', $tanggal)
             ->where('jams.jam Between "'.$jamMulai.'" and "'. $jamAkhir. '"')
-            ->orderBy('jadwals.status_booking', 'asc')
+            ->where('jadwals.status_booking', 0)
+            ->orderBy('lapangans.nomor', 'asc')
             ->find();
+    }
 
-        return $result;
+    public function jadwalSelesai()
+    {
+        $dataJadwals = $this->join('jams', 'jadwals.id_jam = jams.jam_id')
+        ->join('bookings', 'jadwals.jadwal_id = bookings.id_jadwal')
+        ->join('pembayarans', 'pembayarans.id_booking = bookings.booking_id')
+        ->select('jadwals.jadwal_id, jadwals.id_lapangan, jams.jamAkhir, jadwals.tanggal, pembayarans.status')->find();
+
+        foreach ($dataJadwals as $data) {
+            if ($data['status'] === 'Terbayar') {
+                if ($data['jamAkhir'] >= date('h:i')) {
+                    $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
+    
+                    $modelLapangan = new Lapangan();
+                    $modelLapangan->update($data['id_lapangan'], ['status' => 0]);
+                }
+            } else {
+                if ($data['jamAkhir'] >= date('h:i')) {
+                    $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
+    
+                    $modelLapangan = new Lapangan();
+                    $modelLapangan->update($data['id_lapangan'], ['status' => 0]);
+                }
+            }
+        }
     }
 }

@@ -15,8 +15,13 @@ class Jam extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'jam' => [
-                'type' => 'TIME',
+            'jamMulai' => [
+                'type' => 'VARCHAR',
+                'constraint' => '50',
+            ],
+            'jamAkhir' => [
+                'type' => 'VARCHAR',
+                'constraint' => '50',
             ],
         ]);
         $this->forge->addKey('jam_id', true);

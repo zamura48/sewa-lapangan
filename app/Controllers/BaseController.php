@@ -7,6 +7,7 @@ use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
+use Midtrans\Config;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -38,7 +39,7 @@ abstract class BaseController extends Controller
      * @var array
      */
     protected $helpers = [
-        'form', 'url', 'validation', 'session'
+        'form', 'url', 'validation', 'session', 'db'
     ];
 
     /**
@@ -56,8 +57,33 @@ abstract class BaseController extends Controller
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
+        date_default_timezone_set('Asia/Jakarta');
 
         $this->validation = \Config\Services::validation();
         $this->session = \Config\Services::session();
+        Config::$serverKey = getenv('midtrans.serverKey');
+        Config::$clientKey = getenv('midtrans.clientKey');
+        // Config::$isProduction = getenv('midtrans.isProduction');
+        Config::$isSanitized = getenv('midtrans.isSanitized');
+        Config::$is3ds = getenv('midtrans.is3ds');
+    }
+
+    public function hargaPerjam($jamMulai, $jamAkhir, $harga)
+    {
+        $selisihJam = date_diff(date_create($jamMulai), date_create($jamAkhir));
+        $explodeJam = explode('.', $selisihJam->format("%h.%i"));
+        
+        $harga = $harga * $explodeJam[0];
+
+        $tambahanHarga = 0;
+        if ($explodeJam[1] >= 1 && $explodeJam[1] <= 30) {
+            $tambahanHarga = $harga / 2;
+        } elseif ($explodeJam[1] >= 30 && $explodeJam[1] <= 59) {
+            $tambahanHarga = $harga;
+        }
+
+        $harga += $tambahanHarga;
+
+        return $harga;
     }
 }

@@ -30,6 +30,11 @@ class Pelanggan extends Migration
             'alamat' => [
                 'type' => 'TEXT',
             ],
+            'foto' => [
+                'type' => 'VARCHAR',
+                'constraint' => '255',
+                'null' => true
+            ],
         ]);
         $this->forge->addKey('pelanggan_id', true);
         $this->forge->createTable('pelanggans');

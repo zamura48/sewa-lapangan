@@ -5,16 +5,22 @@
     <div class="col-md-6">
         <div class="card animate__animated animate__fadeIn">
             <div class="card-body">
-                <form action="<?= base_url('pelanggan/pesan-lapangan') ?>" method="post">
+                <form action="<?= base_url('pelanggan/pesan-lapangan') ?>" method="post" id="form">
                     <div class="row">
                         <div class="form-group">
-                            <label for="">Tanggal</label>
-                            <input type="date" class="form-control" name="tanggal" value="<?= set_value('tanggal') ?>">
+                            <label for="">Tanggal <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="tanggal" name="tanggal"
+                                value="<?= set_value('tanggal') ?>" required
+                                oninvalid="this.setCustomValidity('Harap isi tanggal ini')"
+                                oninput="setCustomValidity('')">
                         </div>
                         <div class="col-md-5">
                             <div class="form-group">
-                                <label for="">Jam Mulai</label>
-                                <input type="time" class="form-control" name="jamMulai" value="<?= set_value('jamMulai') ?>">
+                                <label for="">Jam Mulai <span class="text-danger">*</span></label>
+                                <input type="time" class="form-control" name="jamMulai"
+                                    value="<?= set_value('jamMulai') ?>" required
+                                    oninvalid="this.setCustomValidity('Harap isi jam mulai ini')"
+                                    oninput="setCustomValidity('')">
                             </div>
                         </div>
                         <div class="col-md-2 align-self-center text-center">
@@ -22,8 +28,11 @@
                         </div>
                         <div class="col-md-5">
                             <div class="form-group">
-                                <label for="">Jam Akhir</label>
-                                <input type="time" class="form-control" name="jamAkhir" value="<?= set_value('jamAkhir') ?>">
+                                <label for="">Jam Akhir <span class="text-danger">*</span></label>
+                                <input type="time" class="form-control" name="jamAkhir"
+                                    value="<?= set_value('jamAkhir') ?>" required
+                                    oninvalid="this.setCustomValidity('Harap isi jam akhir ini')"
+                                    oninput="setCustomValidity('')">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -59,9 +68,26 @@
                             <p>Rp. <span class="fs-4">
                                     <?= $data['harga'] ?>
                                 </span> / jam</p>
-                            <form action="<?= base_url('booking/' . $data['jadwal_id']) ?>" method="post">
-                                <button class="btn btn-secondary">Pesan Sekarang</button>
-                            </form>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <form
+                                        action="<?= base_url('pelanggan/pesan-lapangan/checkout/' . $data['lapangan_id'] . '/' . $tanggal . '/' . $jamMulai . '/' . $jamAkhir) ?>"
+                                        method="post">
+                                        <button class="btn btn-secondary">Pesan Sekarang</button>
+                                    </form>
+                                </div>
+                                <div class="col-md-4 align-self-center">
+                                    <form
+                                        action="<?= base_url('pelanggan/booking/' . $data['lapangan_id'] . '/' . $tanggal . '/' . $jamMulai . '/' . $jamAkhir) ?>"
+                                        method="post">
+                                        <button class="btn btn-transparent">
+                                            <span class="fs-4">
+                                                <i class="bi bi-cart-plus"></i>
+                                            </span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -77,8 +103,33 @@
 
 <?= $this->section('js') ?>
 <script>
+    $(function () {
+        var dtToday = new Date();
+
+        /**
+         * get bulan kemudian tambah 1
+         * kenapa di tambah satu karena ketika
+         * mengambil nilai dari bulan dimulai dari 0 bukan 1
+         */
+        var month = dtToday.getMonth() + 1;
+        var day = dtToday.getDate();
+        var year = dtToday.getFullYear();
+        if (month < 10)
+            month = '0' + month.toString();
+        if (day < 10)
+            day = '0' + day.toString();
+        var maxDate = year + '-' + month + '-' + day;
+        document.getElementById("tanggal").setAttribute("min", maxDate);
+    });
+
+    // document.getElementById('form').addEventListener('submit', (e) => {
+    //     e.preventDefault;
+
+    // });
+
     function reset() {
         location.assign("<?= base_url('pelanggan/pesan-lapangan') ?>");
     }
 </script>
+<?= view('layouts/alert') ?>
 <?= $this->endSection('js') ?>

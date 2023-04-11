@@ -33,12 +33,12 @@ $routes->group('', ['filter' => 'guestFilter'], function ($routes) {
     $routes->get('/', 'LandingPageController::index');
     $routes->get('/login', 'Auth\AuthController::login');
     $routes->post('/login', 'Auth\AuthController::postLogin');
-    $routes->get('logout', 'Auth\AuthController::logout');
     $routes->get('/register', 'Auth\AuthController::register');
     $routes->post('/register', 'Auth\AuthController::postRegister');
 });
 
 $routes->group('', ['filter' => 'authFilter'], function ($routes) {
+    $routes->get('logout', 'Auth\AuthController::logout');
     $routes->group(
         'admin',
         ['filter' => 'adminFilter'],
@@ -110,41 +110,41 @@ $routes->group('', ['filter' => 'authFilter'], function ($routes) {
                 'pesan-lapangan',
                 function ($routes) {
                         $routes->get('', 'DashboardController::pelangganIndex');
+                        $routes->post('/', 'JadwalController::getLapanganExist');
+                        $routes->group('checkout', function ($routes) {
+                            $routes->post('(:any)/(:any)/(:any)/(:any)', 'PembayaranController::bayarLangsung/$1/$2/$3/$4');
+                            $routes->post('payment', 'PembayaranController::payment');
+                            $routes->post('payment/cancel', 'PembayaranController::paymentCancel');
+                        });
                     }
             );
-
-            // $routes->group(
-            //     'jadwal',
-            //     function ($routes) {
-            //             $routes->get('/', 'JadwalController::indexJadwal');
-            //         }
-            // );
 
             $routes->group('keranjang', function ($routes) {
                 $routes->get('/', 'BookingController::getKeranjangUser');
-                $routes->get('(:any)', 'BookingController::deleteKeranjangUser/$1');
-                $routes->post('checkout', 'BookingController::postCheckOut');
+                $routes->get('(:any)/delete', 'BookingController::deleteKeranjangUser/$1');
+                $routes->group('checkout', function ($routes) {
+                    $routes->post('', 'BookingController::checkout');
+                    $routes->post('payment', 'BookingController::payment');
+                    $routes->post('payment/cancel', 'BookingController::paymentCancel');
+                });
             });
 
-            // $routes->group(
-            //     'booking',
-            //     function ($routes) {
-            //             $routes->get('/', 'BookingController::index');
-            //             $routes->post('/', 'BookingController::store');
-            //             $routes->get('(:any)', 'BookingController::getCheckout/$1');
-            //         }
-            // );
-    
             $routes->group(
-                'pesan-lapangan',
+                'booking',
                 function ($routes) {
-                        $routes->post('/', 'JadwalController::getLapanganExist');
+                        $routes->get('/', 'BookingController::index');
+                        $routes->post('/', 'BookingController::store');
+                        // $routes->post('(:any)', 'BookingController::postKeranjang/$1');
+                        $routes->post('(:any)/(:any)/(:any)/(:any)', 'BookingController::postPesanan/$1/$2/$3/$4');
                     }
             );
+
+            $routes->get('histori', 'HistoriController::index');
 
             $routes->group('profil', function ($routes) {
                 $routes->get('(:any)', 'UserController::profil');
                 $routes->post('/', 'UserController::updateProfil');
+                $routes->post('update-foto', 'UserController::updateFoto');
             });
         }
     );

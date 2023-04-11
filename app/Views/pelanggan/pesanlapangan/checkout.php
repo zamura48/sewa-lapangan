@@ -18,8 +18,8 @@
 <body>
     <nav class="navbar navbar-light">
         <div class="container d-block">
-            <a href="<?= base_url('pelanggan/keranjang') ?>"><i class="bi bi-chevron-left"></i></a>
-            <a class="navbar-brand ms-2" href="<?= base_url('pelanggan/keranjang') ?>">
+            <a href="<?= base_url('pelanggan/pesan-lapangan') ?>"><i class="bi bi-chevron-left"></i></a>
+            <a class="navbar-brand ms-2" href="<?= base_url('pelanggan/pesan-lapangan') ?>">
                 <span class="fw-bold">LapanganKu</span>
             </a>
         </div>
@@ -100,19 +100,18 @@
 
             $("#btnBayar").attr('disabled', true).text('').append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
 
-            let cbCheckeds = [];
             let dp = $("#dp").val();
-
-            <?php foreach ($checkedChecboxs as $value) { ?>
-                cbCheckeds.push('<?= $value ?>');
-            <?php } ?>
 
             $.ajax({
                 type: "POST",
-                url: "<?= base_url('pelanggan/keranjang/checkout/payment') ?>",
+                url: "<?= base_url('pelanggan/pesan-lapangan/checkout/payment') ?>",
                 data: {
-                    'id': cbCheckeds,
-                    'dp': dp
+                    'id': <?= $idLapangan ?>,
+                    'dp': dp,
+                    'subTotal': <?= $subTotal ?>,
+                    'tanggal': <?= $tanggal ?>,
+                    'jamMulai': "<?= $jamMulai ?>",
+                    'jamAkhir': "<?= $jamAkhir ?>"
                 },
                 dataType: "json",
                 success: function (response) {
@@ -161,7 +160,7 @@
                             /* You may add your own js here, this is just example */
                             alert("payment failed!");
                             console.log(result);
-                            cancelPayment(cbCheckeds);
+                            cancelPayment(<?= $idLapangan ?>);
                             Swal.fire({
                                 icon: "error",
                                 title: "Error",
@@ -170,7 +169,7 @@
                         },
                         onClose: function () {
                             // alert('you closed the popup without finishing the payment');
-                            cancelPayment(cbCheckeds);
+                            cancelPayment(<?= $idLapangan ?>);
                             Swal.fire({
                                 icon: "warning",
                                 title: "Peringatan",
@@ -194,12 +193,12 @@
         });
 
 
-        function cancelPayment(cbCheckeds) {
+        function cancelPayment(idLapangan) {
             $.ajax({
                 type: "post",
-                url: "<?= base_url('pelanggan/keranjang/checkout/payment/cancel') ?>",
+                url: "<?= base_url('pelanggan/pesan-lapangan/checkout/payment/cancel') ?>",
                 data: {
-                    'checkedChecboxs': cbCheckeds,
+                    'id': <?= $idLapangan ?>,
                 },
                 dataType: "json",
                 success: function (response) {

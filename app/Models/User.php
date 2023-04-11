@@ -24,13 +24,14 @@ class User extends Model
 
     // Validation
     protected $validationRules = [
-        'username' => 'required',
+        'username' => 'required|is_unique[users.username]',
         'email' => 'required|valid_email|is_unique[users.email]',
         'password' => 'required|min_length[8]',
     ];
     protected $validationMessages = [
         'username' => [
-            'required' => 'Username tidak boleh kosong'
+            'required' => 'Username tidak boleh kosong',
+            'is_unique' => 'Email sudah terpakai, gunakan username lain'
         ],
         'role' => [
             'required' => 'Role tidak boleh kosong'
@@ -38,7 +39,7 @@ class User extends Model
         'email' => [
             'required' => 'Email tidak boleh kosong',
             'email' => 'Format email salah',
-            'is_unique' => 'Email sudah terpakai, tolong gunakan email lain'
+            'is_unique' => 'Email sudah terpakai, gunakan email lain'
         ],
         'password' => [
             'required' => 'Password tidak boleh kosong',
@@ -62,7 +63,7 @@ class User extends Model
     public function getProfile($username)
     {
         $result = $this->join('pelanggans', 'users.user_id = pelanggans.id_user')
-            ->select('pelanggans.nama, pelanggans.noHp, pelanggans.alamat, users.email')
+            ->select('pelanggans.nama, pelanggans.noHp, pelanggans.alamat, users.email, pelanggans.foto')
             ->where('username', $username)
             ->first();
 
@@ -77,6 +78,16 @@ class User extends Model
             ->first();
 
         return $result['pelanggan_id'];
+    }
+
+    public function getPelanggan($username)
+    {
+        $result = $this->join('pelanggans', 'users.user_id = pelanggans.id_user')
+            ->select('pelanggans.pelanggan_id, pelanggans.nama, users.email, pelanggans.noHp, pelanggans.foto')
+            ->where('username', $username)
+            ->first();
+
+        return $result;
     }
 
     public function getIdUser($username)

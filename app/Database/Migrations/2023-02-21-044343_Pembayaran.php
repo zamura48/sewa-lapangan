@@ -18,23 +18,29 @@ class Pembayaran extends Migration
             'kode_pembayaran' => [
                 'type' => 'VARCHAR',
                 'constraint' => '50',
-                'unique' => true,
             ],
             'id_booking' => [
                 'type' => 'VARCHAR',
                 'constraint' => '50',
             ],
-            'status_pembayaran' => [
+            'payment_method' => [
                 'type' => 'ENUM',
                 'constraint' => "'CASH', 'DP'",
+            ],
+            'payment_type' => [
+                'type' => 'VARCHAR',
+                'constraint' => '50',
+                'null' => true
             ],
             'no_rek' => [
                 'type' => 'VARCHAR',
                 'constraint' => '50',
+                'null' => true
             ],
             'status' => [
                 'type' => 'VARCHAR',
                 'constraint' => '25',
+                'null' => true
             ],
         ]);
         $this->forge->addKey('pembayaran_id', true);

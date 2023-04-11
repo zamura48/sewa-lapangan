@@ -28,13 +28,16 @@ class AuthController extends BaseController
             if (!password_verify($input['password'], $dataUser['password'])) {
                 return redirect()->to(base_url('/login'))->with('errors', "Username/Email atau Password tidak cocok");
             }else {
+                $dataPelanggan = $model->getPelanggan($dataUser['username']);
+
                 $session = session();
                 $session->set('logged_in', true);
                 $session->set('username', $dataUser['username']);
                 $session->set('role', $dataUser['role']);
                 $session->set('id', base64_encode($dataUser['user_id']));
+                $session->set('foto', $dataPelanggan['foto']);
 
-                if ($dataUser['role'] === 'admin') {
+                if ($dataUser['role'] === 'Admin') {
                     $linkRedirect = 'admin/dashboard';
                 } else {
                     $linkRedirect = 'pelanggan/pesan-lapangan';

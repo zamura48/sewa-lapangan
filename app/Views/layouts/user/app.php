@@ -10,8 +10,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('mazer/assets/css/bootstrap.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('mazer/assets/vendors/toastify/toastify.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('mazer/assets/vendors/sweetalert2/sweetalert2.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('mazer/assets/vendors/bootstrap-icons/bootstrap-icons.css') ?>">
     <link rel="stylesheet" href="<?= base_url('mazer/assets/css/app.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('customcss.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('mazer/assets/vendors/fontawesome/all.min.css') ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 </head>
 
@@ -46,9 +50,10 @@
                 <?php if (session('logged_in') && session('role') === "Pelanggan") { ?>
                     <a href="<?= base_url('pelanggan/profil/' . session('username')) ?>"
                         class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-                        <!-- <svg class="bi me-2" width="40" height="32">
-                            <use xlink:href="#bootstrap" />
-                        </svg> -->
+                        <div class="avatar me-2">
+                            <?php $deFoto = session('foto') == null ? "2.jpg" : session('foto') ;?>
+                            <img src="<?= base_url('uploads/profil/'.$deFoto) ?>" alt="">
+                        </div>
                         <span class="fs-4 text-white">
                             <?= ucfirst(session('username')) ?>
                         </span>
@@ -62,10 +67,17 @@
                             <?php if ($title == ' | Pesan Lapangan') { ?> active <?php } ?>">Pesan Lapangan</a></li>
                         <li class="nav-item"><a href=" <?= base_url('/pelanggan/keranjang') ?>" class="nav-link text-white
                     <?php if ($title == ' | Keranjang') { ?> active <?php } ?>">Keranjang</a></li>
-                        <li class="nav-item"><a href="<?= base_url('/login') ?>"
+                        <li class="nav-item"><a href="<?= base_url('/pelanggan/histori') ?>"
                                 class="nav-link text-white <?php if ($title == ' | History') { ?> active <?php } ?>">History</a>
                         </li>
-                        <li class="nav-item"><a href="<?= base_url('/logout') ?>" class="nav-link text-white">Logout</a>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('/logout') ?>" class="nav-link text-white" data-bs-toggle="tooltip" data-bs-placement="top"
+                            title="Logout">
+                            <span class="fs-4">
+                            <i class="bi bi-box-arrow-right"></i>
+                            </span>
+                            </a>
                         </li>
                     <?php } else { ?>
                         <li class="nav-item"><a href="#" class="nav-link text-white active" aria-current=" page">Beranda</a>
@@ -109,6 +121,13 @@
 
     <script src="<?= base_url('mazer/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js') ?>"></script>
     <script src="<?= base_url('mazer/assets/js/bootstrap.bundle.min.js') ?>"></script>
+
+    <script src="<?= base_url('mazer/assets/vendors/toastify/toastify.js') ?>"></script>
+    <script src="<?= base_url('mazer/assets/js/extensions/toastify.js') ?>"></script>
+
+    <script src="<?= base_url('mazer/assets/vendors/jquery/jquery.min.js') ?>"></script>
+    <script src="<?= base_url('mazer/assets/vendors/sweetalert2/sweetalert2.all.min.js') ?>"></script>
+    <script src="<?= base_url('mazer/assets/js/extensions/sweetalert2.js') ?>"></script>
 
     <script src="<?= base_url('mazer/assets/js/main.js') ?>"></script>
     <?= $this->renderSection('js') ?>

@@ -19,6 +19,10 @@ class Lapangan extends Migration
                 'type' => 'INT',
                 'constraint' => '5',
             ],
+            'harga' => [
+                'type' => 'INT',
+                'constraint' => '11',
+            ],
             'gambar' => [
                 'type' => 'VARCHAR',
                 'constraint' => '50',

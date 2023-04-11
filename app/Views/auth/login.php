@@ -13,9 +13,8 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="p-5">
-                            <?= view('errors/_message_block') ?>
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                <h1 class="h4 text-gray-900 mb-4">LapanganKu</h1>
                             </div>
                             <form class="user" action="<?= url_to('login') ?>" method="post">
                             <?= csrf_field() ?>
@@ -46,3 +45,6 @@
 </div>
 
 <?= $this->endSection('content') ?>
+<?= $this->section('js') ?>
+<?= view('layouts/alert') ?>
+<?= $this->endSection('js') ?>

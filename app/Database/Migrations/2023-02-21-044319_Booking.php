@@ -26,10 +26,12 @@ class Booking extends Migration
             'harga' => [
                 'type' => 'INT',
                 'constraint' => '10',
+                'null' => true
             ],
             'subtotal' => [
                 'type' => 'INT',
                 'constraint' => '10',
+                'null' => true
             ],
         ]);
         $this->forge->addKey('booking_id', true);

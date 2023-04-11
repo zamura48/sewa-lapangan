@@ -31,8 +31,8 @@ class Jadwal extends Migration
                 'constraint' => '10',
             ],
             'status_booking' => [
-                'type' => 'INT',
-                'constraint' => '2',
+                'type' => 'VARCHAR',
+                'constraint' => '50',
             ],
         ]);
         $this->forge->addKey('jadwal_id', true);

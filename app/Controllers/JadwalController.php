@@ -99,9 +99,25 @@ class JadwalController extends BaseController
         $jamMulai = $this->request->getVar('jamMulai');
         $jamAkhir = $this->request->getVar('jamAkhir');
 
+        if (!$tanggal || !$jamMulai || !$jamAkhir) {
+            return redirect('')->to(base_url('pelanggan/pesan-lapangan'))->with('errors', 'Tanggal / Jam Mulai / Jam Akhir tidak boleh kosong.');
+        } elseif ($jamMulai >= $jamAkhir) {
+            return redirect('')->to(base_url('pelanggan/pesan-lapangan'))->with('errors', 'Jam mulai tidak boleh lebih besar dari jam akhir.');
+        }
+
+        $modelLapangan = new Lapangan();
+
+        // return view('pelanggan/pesanlapangan/index', [
+        //     'title' => ' | Pesan Lapangan',
+        //     'datas' => $this->model->getJadwalLapanganExit($tanggal, $jamMulai, $jamAkhir)
+        // ]);
+
         return view('pelanggan/pesanlapangan/index', [
             'title' => ' | Pesan Lapangan',
-            'datas' => $this->model->getJadwalLapanganExit($tanggal, $jamMulai, $jamAkhir)
+            'datas' => $modelLapangan->getLapanganExist(),
+            'tanggal' => $tanggal,
+            'jamMulai' => $jamMulai,
+            'jamAkhir' => $jamAkhir,
         ]);
     }
 }

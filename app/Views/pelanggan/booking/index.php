@@ -5,46 +5,47 @@
         <div class="card animate__animated animate__fadeIn shadow">
             <div class="card-body">
                 <form action="<?= base_url('pelanggan/keranjang/checkout') ?>" method="post">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th><input type="checkbox" class="form-check-input" id="checkboxAll"></th>
-                                <th>Item</th>
-                                <th>Tanggal</th>
-                                <th>Jam</th>
-                                <th>Total</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($datas as $data) { ?>
-                                <tr id="keranjang">
-                                    <td>
-                                        <input type="checkbox" class="form-check-input" id="checkboxItem"
-                                            name="checkboxItem[]" value="<?= $data['booking_id'] ?>">
-                                    </td>
-                                    <td>
-                                        <?= $data['nomor'] ?>
-                                    </td>
-                                    <td>
-                                        <?= $data['tanggal'] ?>
-                                    </td>
-                                    <td>
-                                        <?= $data['jam'] ?>
-                                    </td>
-                                    <td id="harga<?= $data['booking_id'] ?>" class="harga">
-                                        <?= $data['harga'] ?>
-                                    </td>
-                                    <td>
-                                        <a href="<?= base_url('pelanggan/keranjang/' . $data['booking_id']) ?>"
-                                            class="btn btn-danger">Hapus</a>
-                                    </td>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" class="form-check-input" id="checkboxAll"></th>
+                                    <th>Item</th>
+                                    <th>Tanggal</th>
+                                    <th>Jam</th>
+                                    <th>Total</th>
+                                    <th>Aksi</th>
                                 </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($datas as $data) { ?>
+                                    <tr id="keranjang">
+                                        <td>
+                                            <input type="checkbox" class="form-check-input" id="checkboxItem"
+                                                name="checkboxItem[]" value="<?= $data['booking_id'] ?>">
+                                        </td>
+                                        <td>
+                                            Lapangan <?= $data['nomor'] ?>
+                                        </td>
+                                        <td>
+                                            <?= $data['tanggal'] ?>
+                                        </td>
+                                        <td>
+                                            <?= $data['jamMulai'] ?> - <?= $data['jamAkhir'] ?>
+                                        </td>
+                                        <td id="harga<?= $data['booking_id'] ?>" class="harga">
+                                            <?= $data['harga'] ?>
+                                        </td>
+                                        <td>
+                                            <!-- <a href=""
+                                                class="btn btn-danger">Hapus</a> -->
+                                            <a class="btn btn-danger" onclick="alertDelete(<?= $data['booking_id']?>)">Hapus</a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <div class="row justify-content-end">
                         <div class="col-md-6 align-self-end">
@@ -56,17 +57,14 @@
                                     <span class="text-secondary" id="totalHarga">0</span>
                                 </div>
                             </div>
-                            <div class="form-group row align-items-center">
+                            <!-- <div class="form-group row align-items-center">
                                 <div class="col-lg-4 col-3">
-                                    <label for="col-form-label">Tipe Pembayaran</label>
+                                    <label for="col-form-label">Pembayaran DP <span class="text-danger">*</span></label>
                                 </div>
                                 <div class="col-lg-8 col-md-9">
-                                    <select name="" id="" class="form-control">
-                                        <option value="">Cash</option>
-                                        <option value="">DP</option>
-                                    </select>
+                                    <input type="text" class="form-control" name="dp">
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="d-grid gap-2 mt-3">
                                 <button type="submit" class="btn btn-warning">Pembayaran</button>
                             </div>
@@ -152,6 +150,21 @@
         });
     });
 
-
+    function alertDelete(id) {
+        Swal.fire({
+            title: 'Kamu yakin?',
+            text: "Anda tidak akan dapat mengembalikan ini!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "<?= base_url('pelanggan/keranjang/') ?>"+id+"/delete"
+            }
+        })
+    }
 </script>
+<?= view('layouts/alert') ?>
 <?= $this->endSection('js') ?>
