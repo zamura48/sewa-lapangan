@@ -11,11 +11,20 @@ class UserSeeder extends Seeder
     public function run()
     {
         $modelUser = new User();
-        $modelUser->save([
-            'role' => "Admin",
-            'username' => "admin",
-            'email' => "admin@admin.com",
-            'password' => password_hash("123123123", PASSWORD_DEFAULT)
-        ]);
+        $data = [
+            [
+                'role' => "Admin",
+                'username' => "admin",
+                'email' => "admin@admin.com",
+                'password' => password_hash("admin", PASSWORD_DEFAULT)
+            ],
+            [
+                'role' => "Pelanggan",
+                'username' => "pelanggan",
+                'email' => "pelanggan@admin.com",
+                'password' => password_hash("pelanggan", PASSWORD_DEFAULT)
+            ]
+        ];
+        $modelUser->insertBatch($data);
     }
 }
