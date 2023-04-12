@@ -68,5 +68,20 @@ php spark db:seed
 php spark serve
 ```
 
+# Pengguna
+```user
+#--------------------------------------------------------------------
+# Admin
+#--------------------------------------------------------------------
+admin@gmail.com
+admin
+
+#--------------------------------------------------------------------
+# Pelanggan
+#--------------------------------------------------------------------
+pelanggan@gmail.com
+pelanggan
+```
+
 # Testing pembayaran
 jika ingin mencoba pembayaran midtrans kunjungi link berikut https://simulator.sandbox.midtrans.com/openapi/va/index
