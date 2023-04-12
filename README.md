@@ -6,7 +6,7 @@ git clone https://github.com/zamura48/sewa-lapangan.git
 
 - jika sudah ada projek ini, dan ingin memperbarui tinggal gitpull
 ```clone
-gitpull
+git pull
 ```
 
 - jalankan perintah ini di git bash/vscode terminal
@@ -20,7 +20,7 @@ composer update
 ```
 
 - buat database dengan nama "sewa-lapangan" (atau dengan nama yang lain)
-- buka file .env pada projek ini, hilangkan comment pada bagian database, kemudian isi dengan konfigurasi database (atau bisa mengikuti contoh dibawah ini)
+- buka file .env pada projek ini, hilangkan comment pada bagian database dan midtrans, kemudian isi dengan konfigurasi database dan midtrans (atau bisa mengikuti contoh dibawah ini)
 ```env
 #--------------------------------------------------------------------
 # DATABASE
@@ -41,6 +41,15 @@ database.tests.password =
 database.tests.DBDriver = MySQLi
 database.tests.DBPrefix =
 database.tests.port = 3306
+
+#--------------------------------------------------------------------
+# Midtrans
+#--------------------------------------------------------------------
+midtrans.serverKey     = 'isi server key dari midtrans'
+midtrans.clientKey     = 'isi client key dari midtrans'
+midtrans.isProduction  = true
+midtrans.isSanitized   = true
+midtrans.is3ds         = true
 ```
 
 - jalankan perintah ini di git bash/vscode terminal
