@@ -69,4 +69,4 @@ php spark serve
 ```
 
 # Testing pembayaran
-jika ingin mencoba pembayaran kunjungi link berikut https://simulator.sandbox.midtrans.com/openapi/va/index
+jika ingin mencoba pembayaran midtrans kunjungi link berikut https://simulator.sandbox.midtrans.com/openapi/va/index
