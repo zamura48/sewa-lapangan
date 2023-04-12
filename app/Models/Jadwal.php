@@ -105,15 +105,15 @@ class Jadwal extends Model
         ->select('jadwals.jadwal_id, jadwals.id_lapangan, jams.jamAkhir, jadwals.tanggal, pembayarans.status')->find();
 
         foreach ($dataJadwals as $data) {
-            if ($data['status'] === 'Terbayar') {
-                if ($data['jamAkhir'] >= date('h:i')) {
+            if ($data['status'] == 'Terbayar') {
+                if ($data['jamAkhir'] <= date('h:i')) {
                     $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
     
                     $modelLapangan = new Lapangan();
                     $modelLapangan->update($data['id_lapangan'], ['status' => 0]);
                 }
             } else {
-                if ($data['jamAkhir'] >= date('h:i')) {
+                if ($data['jamAkhir'] <= date('h:i')) {
                     $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
     
                     $modelLapangan = new Lapangan();

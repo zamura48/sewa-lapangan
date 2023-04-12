@@ -4,6 +4,11 @@
 git clone https://github.com/zamura48/sewa-lapangan.git
 ```
 
+- jika sudah ada projek ini, dan ingin memperbarui tinggal gitpull
+```clone
+gitpull
+```
+
 - jalankan perintah ini di git bash/vscode terminal
 ```cpenv
 cp env .env
@@ -53,3 +58,6 @@ php spark db:seed
 ```serve
 php spark serve
 ```
+
+# Testing pembayaran
+jika ingin mencoba pembayaran kunjungi link berikut https://simulator.sandbox.midtrans.com/openapi/va/index

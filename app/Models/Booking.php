@@ -63,7 +63,7 @@ class Booking extends Model
 
     public function getDataPesananUsers($idUser)
     {
-        $this->pembatalanBooking();
+        // $this->pembatalanBooking();
 
         $result = $this->join('pelanggans', 'bookings.id_pelanggan = pelanggans.pelanggan_id')
         ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
@@ -85,7 +85,7 @@ class Booking extends Model
         ->join('users', 'pelanggans.id_user = users.user_id')
         ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
         ->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
-        ->select('bookings.booking_id, lapangans.nomor, pelanggans.nama, users.email, pelanggans.noHp, bookings.harga, bookings.subtotal')
+        ->select('bookings.booking_id, lapangans.nomor, pelanggans.nama, users.email, pelanggans.noHp, bookings.harga, bookings.subtotal, jadwals.jadwal_id')
         ->whereIn("bookings.booking_id", $idBooking)
         ->where('bookings.id_pelanggan', $idPelanggan)
         ->find();
@@ -167,7 +167,7 @@ class Booking extends Model
         ->find();
 
         foreach ($datas as $data) {
-            if ($data['tanggal'] <= date('Y-m-d')) {
+            if ($data['tanggal'] >= date('Y-m-d')) {
                 $modelJadwal = new Jadwal();
                 $modelJam = new Jam();
                 $modelLapangan = new Lapangan();

@@ -65,10 +65,10 @@ class Pembayaran extends Model
             } elseif ($midtranStatus->transaction_status == 'failure') {
                 $transaction_status = 'Gagal';
             }
-
-            $this->update($result['kode_pembayaran'], [
-                'status' => $transaction_status
-            ]);
+            
+            $this->set(['status' => $transaction_status]);
+            $this->where('kode_pembayaran', $result['kode_pembayaran']);
+            $this->update();
 
             $datas[] = [
                 'kode_pembayaran' => $result['kode_pembayaran'],

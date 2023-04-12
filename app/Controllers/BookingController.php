@@ -64,10 +64,11 @@ class BookingController extends BaseController
             'jamAkhir' => $jamAkhir
         ]);
 
+        
         $dataLapangan = $modelLapangan->where('lapangan_id', $id)->first();
-
+        
         $harga = $this->hargaPerjam($jamMulai, $jamAkhir, $dataLapangan['harga']);
-
+        
         $modelJadwal->save([
             'id_jam' => $modelJam->getInsertID(),
             'id_lapangan' => $id,
@@ -75,12 +76,14 @@ class BookingController extends BaseController
             'harga' => $harga,
             'status_booking' => 'Terboking'
         ]);
-
+        
         $this->modelBooking->save([
             'id_pelanggan' => base64_decode(session('id')),
             'id_jadwal' => $modelJadwal->getInsertID(),
             'harga' => $harga
         ]);
+
+        // dd($this->modelBooking->getInsertID());
 
         $modelLapangan->update($id, [
             'status' => 1
@@ -150,6 +153,9 @@ class BookingController extends BaseController
                     'kode_pembayaran' => $kodePemabayaran,
                     'id_booking' => $item['booking_id'],
                 ]);
+
+                $modelJadwal = new Jadwal();
+                $modelJadwal->update($item['jadwal_id'], ['status_booking' => 'Terboking']);
             }
 
             $transaction = [
