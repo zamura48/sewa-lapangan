@@ -167,7 +167,7 @@ class Booking extends Model
         ->find();
 
         foreach ($datas as $data) {
-            if ($data['tanggal'] >= date('Y-m-d')) {
+            if ($data['tanggal'] <= date('Y-m-d')) {
                 $modelJadwal = new Jadwal();
                 $modelJam = new Jam();
                 $modelLapangan = new Lapangan();
