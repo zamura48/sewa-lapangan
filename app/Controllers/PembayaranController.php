@@ -75,10 +75,6 @@ class PembayaranController extends BaseController
             'subtotal' => $subTotal
         ]);
 
-        $modelLapangan->update($idLapangan, [
-            'status' => 1
-        ]);
-
         $kodePemabayaran = "TRX-" . date('Ymd') . rand('100', '999');
 
         $dataPelanggan = $modelUser->getPelanggan(session('username'));
@@ -90,6 +86,7 @@ class PembayaranController extends BaseController
             $modelPembayaraan->save([
                 'kode_pembayaran' => $kodePemabayaran,
                 'id_booking' => $modelBooking->getInsertID(),
+                'payment_method' => $harga == $subTotal ? "Cash" : "DP"
             ]);
 
             $transaction = [

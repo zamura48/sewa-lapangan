@@ -7,7 +7,7 @@
         <p>Tempat gelanggang olahraga badminton jombang.</p>
     </div>
     <div class="col-md-6">
-        <img src="<?= ('mazer/assets/images/samples/error-500.png') ?>" width="546" height="365" alt="" class="img-fluid rounded">
+        <img src="<?= ('mazer/assets/images/samples/2020-12-29.jpg') ?>" width="546" height="365" alt="" class="img-fluid rounded">
     </div>
 </div>
 

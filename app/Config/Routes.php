@@ -29,8 +29,9 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
+$routes->get('/', 'LandingPageController::index');
+
 $routes->group('', ['filter' => 'guestFilter'], function ($routes) {
-    $routes->get('/', 'LandingPageController::index');
     $routes->get('/login', 'Auth\AuthController::login');
     $routes->post('/login', 'Auth\AuthController::postLogin');
     $routes->get('/register', 'Auth\AuthController::register');
@@ -39,6 +40,8 @@ $routes->group('', ['filter' => 'guestFilter'], function ($routes) {
 
 $routes->group('', ['filter' => 'authFilter'], function ($routes) {
     $routes->get('logout', 'Auth\AuthController::logout');
+
+    // routing admin
     $routes->group(
         'admin',
         ['filter' => 'adminFilter'],
@@ -71,35 +74,90 @@ $routes->group('', ['filter' => 'authFilter'], function ($routes) {
                     }
             );
 
-            $routes->group(
-                'jadwal',
-                function ($routes) {
-                        $routes->get('/', 'JadwalController::index');
-                        $routes->post('/', 'JadwalController::store');
-                        $routes->post('update/(:any)', 'JadwalController::update/$1');
-                        $routes->get('delete/(:any)', 'JadwalController::destroy/$1');
-                    }
-            );
-
-            $routes->group(
-                'jam',
-                function ($routes) {
-                        $routes->get('/', 'JamController::index');
-                        $routes->post('/', 'JamController::store');
-                        $routes->post('update/(:any)', 'JamController::update/$1');
-                        $routes->get('delete/(:any)', 'JamController::destroy/$1');
-                    }
-            );
-
+            // $routes->group(
+            //     'jadwal',
+            //     function ($routes) {
+            //             $routes->get('/', 'JadwalController::index');
+            //             $routes->post('/', 'JadwalController::store');
+            //             $routes->post('update/(:any)', 'JadwalController::update/$1');
+            //             $routes->get('delete/(:any)', 'JadwalController::destroy/$1');
+            //         }
+            // );
+    
+            // $routes->group(
+            //     'jam',
+            //     function ($routes) {
+            //             $routes->get('/', 'JamController::index');
+            //             $routes->post('/', 'JamController::store');
+            //             $routes->post('update/(:any)', 'JamController::update/$1');
+            //             $routes->get('delete/(:any)', 'JamController::destroy/$1');
+            //         }
+            // );
+    
             $routes->group(
                 'pesanan',
                 function ($routes) {
                         $routes->get('/', 'PesananController::index');
                     }
             );
+
+            $routes->group(
+                'laporan-pemesanan',
+                function ($routes) {
+                        $routes->get('/', 'LaporanPemesananController::index');
+                    }
+            );
         }
     );
+    // end routing admin
 
+    // routing owner
+    $routes->group(
+        'owner',
+        [
+            'filter' => 'ownerFilter',
+            'namespace' => '\App\Controllers\Owner'
+        ],
+        function ($routes) {
+            $routes->group(
+                'dashboard',
+                function ($routes) {
+                        $routes->get('/', 'DashboardController::index');
+                    }
+            );
+
+            $routes->group(
+                'administrator',
+                function ($routes) {
+                        $routes->get('/', 'AdministratorController::index');
+                    }
+            );
+
+            $routes->group(
+                'pelanggan',
+                function ($routes) {
+                        $routes->get('/', 'PelangganController::index');
+                    }
+            );
+
+            $routes->group(
+                'lapangan',
+                function ($routes) {
+                        $routes->get('/', 'LapanganController::index');
+                    }
+            );
+
+            $routes->group(
+                'laporan-pemesanan',
+                function ($routes) {
+                        $routes->get('/', 'LaporanPemesananController::index');
+                    }
+            );
+        }
+    );
+    // end routing owner
+
+    // routing pelanggan
     $routes->group(
         'pelanggan',
         ['filter' => 'pelangganFilter'],
@@ -148,6 +206,7 @@ $routes->group('', ['filter' => 'authFilter'], function ($routes) {
             });
         }
     );
+    // end routing pelanggan
 });
 
 /*

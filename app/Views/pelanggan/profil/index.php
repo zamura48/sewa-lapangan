@@ -13,10 +13,21 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <form action="<?= base_url('pelanggan/profil/update-foto') ?>" method="post" enctype="multipart/form-data">
+                        <form action="<?= base_url('pelanggan/profil/update-foto') ?>" method="post"
+                            enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="">Foto</label>
-                                <input type="file" class="form-control" id="foto" name="foto" accept=".jpg,.png,.jpeg">
+                                <input type="file" class="form-control" id="foto" name="foto" accept=".jpg,.png,.jpeg"
+                                    required>
+                                <?php if (session()->has('validation_gambar')): ?>
+                                    <small style="color: red;">
+                                        <?php foreach (session('validation_gambar') as $key => $value) { ?>
+                                            <small style="color: red;">
+                                                <?= $value ?>
+                                            </small>
+                                        <?php } ?>
+                                    </small>
+                                <?php endif ?>
                             </div>
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-warning">Perbarui</button>

@@ -97,4 +97,19 @@ class Pembayaran extends Model
 
         $this->db->query($sql, array($idLapangan));
     }
+
+    public function getTotalPendapatanPerbulan($bulan = '', $tahun = '')
+    {
+        $get_bulan = $bulan == '' ? date('n') : $bulan;
+        $get_tahun = $tahun == '' ? date('Y') : $tahun;
+
+        $query = "SELECT SUM(b.harga) AS total_harga 
+        FROM pembayarans p
+        INNER JOIN bookings b ON b.booking_id = p.id_booking
+        INNER JOIN jadwals j ON j.jadwal_id = b.id_jadwal AND MONTH(j.tanggal) = ? AND YEAR(j.tanggal) = ?
+        WHERE p.status = 'Terbayar'
+        GROUP BY MONTH(j.tanggal)";
+
+        return $this->db->query($query, [$get_bulan, $get_tahun])->getResult();
+    }
 }

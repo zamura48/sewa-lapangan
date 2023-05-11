@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\Booking;
 
-class PesananController extends BaseController
+class LaporanPemesananController extends BaseController
 {
     protected $model;
 
@@ -13,12 +13,12 @@ class PesananController extends BaseController
     {
         $this->model = new Booking();
     }
-
+    
     public function index()
     {
-        return view('admin/pesanan/index', [
-            'title' => "Pesanan",
-            'datas' => $this->model->getDataPesanans()
+        return view('admin/laporan_pemesanan/index', [
+            'title' => "Laporan Pemesanan",
+            'datas' => $this->model->getDataPesananTerbayar("Terbayar")
         ]);
     }
 }

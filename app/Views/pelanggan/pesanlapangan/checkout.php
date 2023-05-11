@@ -46,7 +46,7 @@
                                     </div>
                                     <div class="form-group row align-items-center">
                                         <div class="col-lg-4 col-3">
-                                            <label for="col-form-label">Pembayaran DP <span
+                                            <label for="col-form-label">Pembayaran <span
                                                     class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-lg-8 col-md-9">
@@ -109,7 +109,7 @@
                     'id': <?= $idLapangan ?>,
                     'dp': dp,
                     'subTotal': <?= $subTotal ?>,
-                    'tanggal': <?= $tanggal ?>,
+                    'tanggal': "<?= $tanggal ?>",
                     'jamMulai': "<?= $jamMulai ?>",
                     'jamAkhir': "<?= $jamAkhir ?>"
                 },

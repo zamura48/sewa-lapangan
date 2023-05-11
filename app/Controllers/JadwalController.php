@@ -24,6 +24,7 @@ class JadwalController extends BaseController
         // dd($this->model->getJadwalWithLapanganAndJams());
 
         return view('admin/jadwal/index', [
+            'title' => "Jadwal",
             'datas' => $this->model->findAll(),
             'dataJams' => $modelJam->findAll(),
             'dataLapangans' => $modelLapangan->findAll()
@@ -99,22 +100,33 @@ class JadwalController extends BaseController
         $jamMulai = $this->request->getVar('jamMulai');
         $jamAkhir = $this->request->getVar('jamAkhir');
 
+        date_default_timezone_set('Asia/Jakarta');
+
+        $tanggal_sekarang = date('Y-m-d');
+        $jam_sekarang_explode = explode(':', date('H:i'));
+        $jam_sekarang = "{$jam_sekarang_explode[0]}:00";
+
         if (!$tanggal || !$jamMulai || !$jamAkhir) {
             return redirect('')->to(base_url('pelanggan/pesan-lapangan'))->with('errors', 'Tanggal / Jam Mulai / Jam Akhir tidak boleh kosong.');
-        } elseif ($jamMulai >= $jamAkhir) {
-            return redirect('')->to(base_url('pelanggan/pesan-lapangan'))->with('errors', 'Jam mulai tidak boleh lebih besar dari jam akhir.');
+        } elseif ($jamMulai >= $jamAkhir || $jamMulai == $jamAkhir) {
+            return redirect('')->to(base_url('pelanggan/pesan-lapangan'))->with('errors', 'Jam yang anda masukkan salah.');
+        } elseif ($jamMulai <= "06:00" || $jamAkhir <= "06:00") {
+            return redirect('')->to(base_url('pelanggan/pesan-lapangan'))->with('errors', 'Maaf kami buka mulai jam 06:00.');
+        } elseif ($jamMulai > "22:00" || $jamAkhir > "22:00") {
+            return redirect('')->to(base_url('pelanggan/pesan-lapangan'))->with('errors', 'Maaf kami mulai jam 22:00 tutup.');
+        } elseif ($tanggal == $tanggal_sekarang) {
+            if ($jam_sekarang != "21:00") {
+                if ($jamMulai < $jam_sekarang) {
+                    return redirect('')->to(base_url('pelanggan/pesan-lapangan'))->with('errors', 'Maaf jam yang anda masukkan salah.');
+                }
+            }
         }
 
         $modelLapangan = new Lapangan();
 
-        // return view('pelanggan/pesanlapangan/index', [
-        //     'title' => ' | Pesan Lapangan',
-        //     'datas' => $this->model->getJadwalLapanganExit($tanggal, $jamMulai, $jamAkhir)
-        // ]);
-
         return view('pelanggan/pesanlapangan/index', [
             'title' => ' | Pesan Lapangan',
-            'datas' => $modelLapangan->getLapanganExist(),
+            'datas' => $modelLapangan->getLapanganExist($tanggal, $jamMulai, $jamAkhir),
             'tanggal' => $tanggal,
             'jamMulai' => $jamMulai,
             'jamAkhir' => $jamAkhir,

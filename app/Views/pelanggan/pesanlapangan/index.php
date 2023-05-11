@@ -17,10 +17,8 @@
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label for="">Jam Mulai <span class="text-danger">*</span></label>
-                                <input type="time" class="form-control" name="jamMulai"
-                                    value="<?= set_value('jamMulai') ?>" required
-                                    oninvalid="this.setCustomValidity('Harap isi jam mulai ini')"
-                                    oninput="setCustomValidity('')">
+                                <input type="time" class="form-control" name="jamMulai" step="3600"
+                                    value="<?= set_value('jamMulai') ?>" required>
                             </div>
                         </div>
                         <div class="col-md-2 align-self-center text-center">
@@ -29,10 +27,8 @@
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label for="">Jam Akhir <span class="text-danger">*</span></label>
-                                <input type="time" class="form-control" name="jamAkhir"
-                                    value="<?= set_value('jamAkhir') ?>" required
-                                    oninvalid="this.setCustomValidity('Harap isi jam akhir ini')"
-                                    oninput="setCustomValidity('')">
+                                <input type="time" class="form-control" name="jamAkhir" step="3600"
+                                    value="<?= set_value('jamAkhir') ?>" required>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -42,7 +38,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="d-grid gap-2 mt-2">
-                                <button type="submit" class="btn btn-primary">Cari</button>
+                                <button type="submit" class="btn btn-primary" id="btn_cari">Cari</button>
                             </div>
                         </div>
                     </div>
@@ -120,7 +116,38 @@
             day = '0' + day.toString();
         var maxDate = year + '-' + month + '-' + day;
         document.getElementById("tanggal").setAttribute("min", maxDate);
+
+        disable_btn_cari.attr('disabled', true);
     });
+
+    $("[name=jamMulai]").change(function (e) {
+        e.preventDefault();
+        jam_mulai = $(this).val();
+
+        let jam_mulai_split = jam_mulai.split(':');
+
+        $(this).val(jam_mulai_split[0]+':00');
+    });
+    
+    $("[name=jamAkhir]").change(function (e) {
+        e.preventDefault();
+        jam_akhir = $(this).val();
+
+        let jam_akhir_split = jam_akhir.split(':');
+
+        $(this).val(jam_akhir_split[0]+':00');
+    });
+
+    // $("[name=jamAkhir]").change(function (e) {
+    //     e.preventDefault();
+    //     jam_akhir = $(this).val();
+
+    //     checkTime(jam_akhir);
+
+    //     if (jam_mulai != undefined || jam_mulai != null) {
+    //         removeDisable(jam_mulai, jam_akhir);
+    //     }
+    // });
 
     // document.getElementById('form').addEventListener('submit', (e) => {
     //     e.preventDefault;
@@ -129,6 +156,34 @@
 
     function reset() {
         location.assign("<?= base_url('pelanggan/pesan-lapangan') ?>");
+    }
+
+    // function removeDisable(jam_mulai, jam_akhir) {
+    //     if (jam_mulai == jam_akhir) {
+    //         errorAlert("Maaf jam yang anda masukkan tidak boleh sama!");
+    //     } else {
+    //         $("#btn_cari").removeAttr('disabled');
+    //     }
+    // }
+
+    // function checkTime(jam) {
+    //     if (jam < "06:00") {
+    //         errorAlert("Maaf kami buka mulai jam 06:00");
+
+    //         $("#btn_cari").attr('disabled', true);
+    //     } else if (jam > "22:00") {
+    //         errorAlert("Maaf kami mulai jam 22:00 tutup");
+
+    //         $("#btn_cari").attr('disabled', true);
+    //     }
+    // }
+
+    function errorAlert(text) {
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: text
+        })
     }
 </script>
 <?= view('layouts/alert') ?>

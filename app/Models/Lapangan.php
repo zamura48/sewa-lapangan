@@ -6,29 +6,29 @@ use CodeIgniter\Model;
 
 class Lapangan extends Model
 {
-    protected $DBGroup          = 'default';
-    protected $table            = 'lapangans';
-    protected $primaryKey       = 'lapangan_id';
+    protected $DBGroup = 'default';
+    protected $table = 'lapangans';
+    protected $primaryKey = 'lapangan_id';
     protected $useAutoIncrement = true;
-    protected $insertID         = 0;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = ['nomor', 'gambar', 'status'];
+    protected $insertID = 0;
+    protected $returnType = 'array';
+    protected $useSoftDeletes = false;
+    protected $protectFields = true;
+    protected $allowedFields = ['nomor', 'gambar', 'status', 'jam_mulai', 'jam_akhir'];
 
     // Dates
     protected $useTimestamps = false;
-    protected $dateFormat    = 'datetime';
+    protected $dateFormat = 'datetime';
     // protected $createdField  = 'created_at';
     // protected $updatedField  = 'updated_at';
     // protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [
+    protected $validationRules = [
         'nomor' => 'required',
         // 'status' => 'required'
     ];
-    protected $validationMessages   = [
+    protected $validationMessages = [
         'nomor' => [
             'required' => 'Nomor tidak boleh kosong'
         ],
@@ -36,26 +36,100 @@ class Lapangan extends Model
         //     'required' => 'Status tidak boleh kosong'
         // ]
     ];
-    protected $skipValidation       = false;
+    protected $skipValidation = false;
     protected $cleanValidationRules = true;
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    protected $beforeInsert = [];
+    protected $afterInsert = [];
+    protected $beforeUpdate = [];
+    protected $afterUpdate = [];
+    protected $beforeFind = [];
+    protected $afterFind = [];
+    protected $beforeDelete = [];
+    protected $afterDelete = [];
 
-    public function getLapanganExist()
+    public function getLapanganExist($tanggal = '', $jam_mulai = '', $jam_akhir = '')
     {
-        $result = $this->select('lapangans.lapangan_id, lapangans.nomor, lapangans.harga, lapangans.gambar')
-        ->where('lapangans.status', 0)
-        ->orderBy('lapangans.nomor', 'asc')
-        ->find();
+        $query = "SELECT l.nomor, l.harga, l.lapangan_id, j.tanggal, jm.jamMulai, jm.jamAkhir
+        FROM lapangans l
+        LEFT JOIN jadwals j ON j.id_lapangan = l.lapangan_id AND j.tanggal = '$tanggal'
+        LEFT JOIN jams jm ON j.id_jam = jm.jam_id AND jm.jamMulai = '$jam_mulai' AND jm.jamAkhir = '$jam_akhir'";
+        $result = $this->db->query($query)->getResultArray();
+
+        $data = [];
+
+        $lapangan_id = 0;
+
+        foreach ($result as $item) {
+            if ($item['jamMulai'] == null && $item['jamMulai'] == null) {
+                if ($lapangan_id == 0) {
+                    $lapangan_id = $item['lapangan_id'];
+
+                    $data[] = [
+                        'lapangan_id' => $item['lapangan_id'],
+                        'nomor' => $item['nomor'],
+                        'harga' => $item['harga'],
+                    ];
+                } else {
+                    if ($lapangan_id != $item['lapangan_id']) {
+                        $lapangan_id = $item['lapangan_id'];
+
+                        $data[] = [
+                            'lapangan_id' => $item['lapangan_id'],
+                            'nomor' => $item['nomor'],
+                            'harga' => $item['harga'],
+                        ];
+                    }
+                }
+            } else {
+                $lapangan_id = $item['lapangan_id'];
+            }
+        }
+
+        return $data;
+    }
+
+    public function getJumlahLapangan()
+    {
+        $query = "select count(lapangan_id) as total_lapangan from lapangans";
+
+        return $this->db->query($query)->getResult();
+    }
+
+    public function getLapanganWithJadwal($date = '')
+    {
+        $datas = $this->findAll();
+
+        $result = [];
+
+        foreach ($datas as $data) {
+            $query = "SELECT jadwals.tanggal, jams.jamMulai, jams.jamAkhir
+        FROM jadwals
+        RIGHT JOIN jams ON jadwals.id_jam = jams.jam_id
+        RIGHT JOIN lapangans ON jadwals.id_lapangan = lapangans.lapangan_id AND lapangans.lapangan_id = '{$data['lapangan_id']}'
+        WHERE jadwals.tanggal = CURDATE()
+        ORDER BY jams.jam_id asc";
+
+            $get_jadwals = $this->db->query($query)->getResultArray();
+
+            $row = [];
+            $row['lapangan_id'] = $data['lapangan_id'];
+            $row['nomor'] = $data['nomor'];
+            $row['status'] = $data['status'];
+
+            foreach ($get_jadwals as $item) {
+                $rw = [];
+                $rw['tanggal'] = $item['tanggal'];
+                $rw['jamMulai'] = $item['jamMulai'];
+                $rw['jamAkhir'] = $item['jamAkhir'];
+
+                $row['jadwal'][] = $rw;
+            }
+
+            $result[] = $row;
+        }
 
         return $result;
     }

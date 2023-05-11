@@ -39,8 +39,10 @@ class AuthController extends BaseController
 
                 if ($dataUser['role'] === 'Admin') {
                     $linkRedirect = 'admin/dashboard';
-                } else {
+                } elseif ($dataUser['role'] == 'Pelanggan') {
                     $linkRedirect = 'pelanggan/pesan-lapangan';
+                } elseif ($dataUser['role'] == 'Owner') {
+                    $linkRedirect = 'owner/dashboard';
                 }
                 
                 return redirect()->to(base_url($linkRedirect));

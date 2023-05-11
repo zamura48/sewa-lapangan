@@ -100,25 +100,15 @@ class Jadwal extends Model
     public function jadwalSelesai()
     {
         $dataJadwals = $this->join('jams', 'jadwals.id_jam = jams.jam_id')
-        ->join('bookings', 'jadwals.jadwal_id = bookings.id_jadwal')
-        ->join('pembayarans', 'pembayarans.id_booking = bookings.booking_id')
-        ->select('jadwals.jadwal_id, jadwals.id_lapangan, jams.jamAkhir, jadwals.tanggal, pembayarans.status')->find();
-
+        // ->join('bookings', 'jadwals.jadwal_id = bookings.id_jadwal')
+        // ->join('pembayarans', 'pembayarans.id_booking = bookings.booking_id')
+        ->select('jadwals.jadwal_id, jadwals.id_lapangan, jams.jamAkhir, jadwals.tanggal, jadwals.status_booking')
+        ->where('jadwals.status_booking', 'Terboking')
+        ->find();
+        
         foreach ($dataJadwals as $data) {
-            if ($data['status'] == 'Terbayar') {
-                if ($data['jamAkhir'] <= date('h:i')) {
-                    $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
-    
-                    $modelLapangan = new Lapangan();
-                    $modelLapangan->update($data['id_lapangan'], ['status' => 0]);
-                }
-            } else {
-                if ($data['jamAkhir'] <= date('h:i')) {
-                    $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
-    
-                    $modelLapangan = new Lapangan();
-                    $modelLapangan->update($data['id_lapangan'], ['status' => 0]);
-                }
+            if ($data['jamAkhir'] < date('H:i')) {
+                $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
             }
         }
     }

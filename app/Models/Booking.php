@@ -49,13 +49,30 @@ class Booking extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
+    public function getDataPesananTerbayar($where = '')
+    {
+        $result = $this->join('pelanggans', 'bookings.id_pelanggan = pelanggans.pelanggan_id')
+        ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
+        ->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
+        ->join('jams', 'jadwals.id_jam = jams.jam_id')
+        ->join('pembayarans', 'pembayarans.id_booking = bookings.booking_id')
+        ->select('bookings.*, jadwals.*, lapangans.*, jams.*, bookings.harga as harga_total, pembayarans.*, pelanggans.*')
+        ->where('pembayarans.status', $where)
+        ->orderBy('bookings.booking_id', "desc")
+        ->find();
+
+        return $result;
+    }
+
     public function getDataPesanans()
     {
         $result = $this->join('pelanggans', 'bookings.id_pelanggan = pelanggans.pelanggan_id')
         ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
         ->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
         ->join('jams', 'jadwals.id_jam = jams.jam_id')
-        ->select('pelanggans.nama, jams.jam, lapangans.nomor, lapangans.gambar, lapangans.status, jadwals.tanggal, jadwals.harga')
+        ->join('pembayarans', 'pembayarans.id_booking = bookings.booking_id')
+        ->select('bookings.*, jadwals.*, lapangans.*, jams.*, bookings.harga as harga_total, pembayarans.*, pelanggans.*')
+        ->orderBy('bookings.booking_id', "desc")
         ->find();
 
         return $result;
@@ -63,7 +80,8 @@ class Booking extends Model
 
     public function getDataPesananUsers($idUser)
     {
-        // $this->pembatalanBooking();
+        $modelJadwal = new Jadwal();
+        $modelJadwal->jadwalSelesai();
 
         $result = $this->join('pelanggans', 'bookings.id_pelanggan = pelanggans.pelanggan_id')
         ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
@@ -72,7 +90,7 @@ class Booking extends Model
         ->join('users', 'pelanggans.id_user = users.user_id')
         ->select('bookings.booking_id, pelanggans.nama, jams.jamMulai, jams.jamAkhir, lapangans.nomor, lapangans.gambar, lapangans.status, jadwals.tanggal, jadwals.harga')
         ->where('bookings.id_pelanggan', $idUser)
-        ->where('bookings.subtotal', null)
+        ->where('jadwals.status_booking', 'Terboking')
         ->orderBy('bookings.booking_id', 'desc')
         ->find();
 
@@ -88,6 +106,7 @@ class Booking extends Model
         ->select('bookings.booking_id, lapangans.nomor, pelanggans.nama, users.email, pelanggans.noHp, bookings.harga, bookings.subtotal, jadwals.jadwal_id')
         ->whereIn("bookings.booking_id", $idBooking)
         ->where('bookings.id_pelanggan', $idPelanggan)
+        ->orderBy('bookings.booking_id', "desc")
         ->find();
 
         $datas = [

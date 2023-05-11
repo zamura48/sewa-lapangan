@@ -26,10 +26,14 @@ $jumlah_array = count($explode);
                 <table class="table table-bordered">
                     <thead class="text-center">
                         <th>No.</th>
-                        <th>Tanggal</th>
+                        <th>Kode Pembayaran</th>
                         <th>Nama Pelanggan</th>
-                        <th>Tipe Pembayaran</th>
+                        <th>Tanggal</th>
+                        <th>Jam</th>
+                        <th>Harga</th>
                         <th>Sub Total</th>
+                        <th>Tipe Pembayaran</th>
+                        <th>Dibayar</th>
                         <th>Aksi</th>
                     </thead>
                     <tbody>
@@ -41,16 +45,28 @@ $jumlah_array = count($explode);
                                     <?= $no++ ?>
                                 </td>
                                 <td class="align-middle">
-                                    <?= $data['tanggal'] ?>
+                                    <?= $data['kode_pembayaran'] ?>
                                 </td>
                                 <td class="align-middle">
                                     <?= $data['nama'] ?>
                                 </td>
                                 <td class="align-middle">
-                                    <?= $data['payment_method'] ?>
+                                    <?= $data['tanggal'] ?>
+                                </td>
+                                <td class="align-middle">
+                                    <?= $data['jamMulai'] . ' - ' . $data['jamAkhir'] ?>
+                                </td>
+                                <td class="align-middle">
+                                    <?= "Rp. " . number_format($data['harga'], 0, ".", ","); ?>
                                 </td>
                                 <td class="align-middle">
                                     <?= "Rp. " . number_format($data['harga_total'], 0, ".", ","); ?>
+                                </td>
+                                <td class="align-middle">
+                                    <?= $data['payment_method'] ?>
+                                </td>
+                                <td class="align-middle">
+                                    <?= "Rp. " . number_format($data['subtotal'], 0, ".", ","); ?>
                                 </td>
                                 <td class="align-middle text-center">
                                     <a class="btn btn-info" data-toggle="modal"
@@ -182,7 +198,6 @@ $jumlah_array = count($explode);
 <script>
     $(document).ready(function () {
         $('.table').dataTable({
-            responsive: true,
             language: {
                 "sProcessing": "Sedang memproses...",
                 "sLengthMenu": "Tampilkan _MENU_ entri",

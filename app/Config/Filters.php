@@ -5,6 +5,7 @@ namespace Config;
 use App\Filters\AdminFilter;
 use App\Filters\AuthFilter;
 use App\Filters\GuestFilter;
+use App\Filters\OwnerFilter;
 use App\Filters\PelangganFilter;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
@@ -29,6 +30,7 @@ class Filters extends BaseConfig
         'adminFilter'   => AdminFilter::class ,
         'pelangganFilter'=> PelangganFilter::class ,
         'guestFilter'   => GuestFilter::class ,
+        'ownerFilter'   => OwnerFilter::class,
     ];
 
     /**

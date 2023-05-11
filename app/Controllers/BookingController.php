@@ -14,6 +14,7 @@ use CodeIgniter\Pager\Exceptions\PagerException;
 use CodeIgniter\Router\Exceptions\RedirectException;
 use Midtrans\Config;
 use Midtrans\Snap;
+use DB;
 
 class BookingController extends BaseController
 {
@@ -83,12 +84,6 @@ class BookingController extends BaseController
             'harga' => $harga
         ]);
 
-        // dd($this->modelBooking->getInsertID());
-
-        $modelLapangan->update($id, [
-            'status' => 1
-        ]);
-
         return redirect()->to(base_url('pelanggan/keranjang'))->with('success', 'Berhasil menambahkan item.');
     }
 
@@ -152,6 +147,7 @@ class BookingController extends BaseController
                 $modelPembayaraan->save([
                     'kode_pembayaran' => $kodePemabayaran,
                     'id_booking' => $item['booking_id'],
+                    'payment_mehtod' => $modelBooking['harga'] == $this->request->getVar('dp') ? "Cash" : "DP"
                 ]);
 
                 $modelJadwal = new Jadwal();
@@ -177,15 +173,11 @@ class BookingController extends BaseController
 
             $snap_token = Snap::getSnapToken($transaction);
             return response()->setStatusCode(200)->setJSON(['snap_token' => $snap_token]);
-            // return view('pelanggan/booking/checkout', [
-            //     'snap_token' => $snap_token
-            // ]);
         } catch (\Exception | DatabaseException $e) {
-            $this->modelBooking->db->transRollback();
+            $this->db->transRollback();
             $modelPembayaraan->db->transRollback();
 
             return response()->setStatusCode(501)->setJSON(['errors' => $e->getMessage()]);
-            // return redirect()->to(base_url('pelanggan/keranjang'))->with('errors', $e->getMessage());
         }
     }
 

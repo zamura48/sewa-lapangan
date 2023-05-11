@@ -91,18 +91,19 @@ class UserController extends BaseController
     public function updateFoto()
     {
         $imageFile = $this->request->getFile('foto');
-        if ($imageFile->isValid() && !$imageFile->hasMoved()) {
-            $validationRules = ['uploaded[foto]|max_size[foto,1024]|ext_in[foto,png,jpg,jpeg]'];
-            $validationMessages = [   
-                'ext_in' => 'Format gambar tidak sesuai',
-                'max_size' => 'Ukuran gambar maximal 1MB',
-            ];
 
-            if (!$this->validate($validationRules, $validationMessages)) {
-                $validation = \Config\Services::validation();
-                
-                session();
-                return redirect()->to(base_url('pelanggan/profil/'.session('username')))->with('validation', $validation->getErrors());
+        session();
+
+        if ($imageFile->isValid() && !$imageFile->hasMoved()) {            
+            $this->validation->setRules([
+                'foto' => [
+                    'label' => 'Foto',
+                    'rules' => 'uploaded[foto]|max_size[foto,1024]|ext_in[foto,png,jpg,jpeg]'
+                ]
+            ]);
+
+            if (!$this->validation->run($_POST)) {
+                return redirect()->to(base_url('pelanggan/profil/'.session('username')))->with('validation_gambar', $this->validation->getErrors());
             }
         
             $nameFile = time().$imageFile->getClientName();
