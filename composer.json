@@ -7,7 +7,9 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "codeigniter4/framework": "^4.0",
+        "dompdf/dompdf": "^2.0",
         "midtrans/midtrans-php": "^2.5",
+        "phpoffice/phpspreadsheet": "^1.28",
         "ramsey/uuid": "^4.7"
     },
     "require-dev": {

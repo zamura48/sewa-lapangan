@@ -19,7 +19,7 @@ class PelangganController extends BaseController
     {
         return view('admin/pelanggan/index', [
             'title' => "Pelanggan",
-            'datas' => $this->model->findAll()
+            'datas' => $this->model->join('users', 'pelanggans.id_user = users.user_id')->find()
         ]);
     }
 

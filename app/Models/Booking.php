@@ -64,6 +64,24 @@ class Booking extends Model
         return $result;
     }
 
+    public function getDataBerdasarkanTanggal($tanggal_mulai = '', $tanggal_akhir = '')
+    {
+        $result = $this->join('pelanggans', 'bookings.id_pelanggan = pelanggans.pelanggan_id')
+        ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
+        ->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
+        ->join('jams', 'jadwals.id_jam = jams.jam_id')
+        ->join('pembayarans', 'pembayarans.id_booking = bookings.booking_id')
+        ->select('bookings.*, jadwals.*, lapangans.*, jams.*, bookings.harga as harga_total, pembayarans.*, pembayarans.status as pembayaran_status, pelanggans.*')
+        ->where('pembayarans.status', 'Terbayar')
+        ->orderBy('bookings.booking_id', "desc");
+
+        if ($tanggal_mulai != '' && $tanggal_akhir != '') {
+            $result->where("jadwals.tanggal between '$tanggal_mulai' and '$tanggal_akhir'");
+        }        
+
+        return $result->find();
+    }
+
     public function getDataPesanans()
     {
         $result = $this->join('pelanggans', 'bookings.id_pelanggan = pelanggans.pelanggan_id')

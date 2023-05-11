@@ -21,8 +21,25 @@ $jumlah_array = count($explode);
             </h4>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
+            <form action="<?= base_url('admin/laporan-pemesanan/export-excel') ?>" method="post">
+                <div class="row mb-3">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="date" class="form-control" name="tanggal_mulai" placeholder="Tanggal Mulai">
+                        </div>
+                    </div>
+                    <div class="cold-md-2">
+                        <div class="form-group">
+                            <input type="date" class="form-control" name="tanggal_akhir" placeholder="Tanggal Akhir">
+                        </div>
+                    </div>
+                    <div class="cold-md-3">
+                        &nbsp; <button type="submit" class="btn btn-info">Export Excel</button>
+                    </div>
+                </div>
+            </form>
 
+            <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead class="text-center">
                         <th>No.</th>

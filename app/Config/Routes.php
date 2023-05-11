@@ -72,27 +72,7 @@ $routes->group('', ['filter' => 'authFilter'], function ($routes) {
                         $routes->post('update/(:any)', 'LapanganController::update/$1');
                         $routes->get('delete/(:any)', 'LapanganController::destroy/$1');
                     }
-            );
-
-            // $routes->group(
-            //     'jadwal',
-            //     function ($routes) {
-            //             $routes->get('/', 'JadwalController::index');
-            //             $routes->post('/', 'JadwalController::store');
-            //             $routes->post('update/(:any)', 'JadwalController::update/$1');
-            //             $routes->get('delete/(:any)', 'JadwalController::destroy/$1');
-            //         }
-            // );
-    
-            // $routes->group(
-            //     'jam',
-            //     function ($routes) {
-            //             $routes->get('/', 'JamController::index');
-            //             $routes->post('/', 'JamController::store');
-            //             $routes->post('update/(:any)', 'JamController::update/$1');
-            //             $routes->get('delete/(:any)', 'JamController::destroy/$1');
-            //         }
-            // );
+            );            
     
             $routes->group(
                 'pesanan',
@@ -105,6 +85,7 @@ $routes->group('', ['filter' => 'authFilter'], function ($routes) {
                 'laporan-pemesanan',
                 function ($routes) {
                         $routes->get('/', 'LaporanPemesananController::index');
+                        $routes->post('export-excel', 'LaporanPemesananController::exportExcel');
                     }
             );
         }
@@ -130,6 +111,7 @@ $routes->group('', ['filter' => 'authFilter'], function ($routes) {
                 'administrator',
                 function ($routes) {
                         $routes->get('/', 'AdministratorController::index');
+                        $routes->post('update/(:any)', 'AdministratorController::update/$1');
                     }
             );
 
@@ -151,6 +133,7 @@ $routes->group('', ['filter' => 'authFilter'], function ($routes) {
                 'laporan-pemesanan',
                 function ($routes) {
                         $routes->get('/', 'LaporanPemesananController::index');
+                        $routes->post('export-excel', 'LaporanPemesananController::exportExcel');
                     }
             );
         }
