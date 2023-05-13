@@ -109,6 +109,7 @@ class Booking extends Model
         ->select('bookings.booking_id, pelanggans.nama, jams.jamMulai, jams.jamAkhir, lapangans.nomor, lapangans.gambar, lapangans.status, jadwals.tanggal, jadwals.harga')
         ->where('bookings.id_pelanggan', $idUser)
         ->where('jadwals.status_booking', 'Terboking')
+        ->where('bookings.subtotal', null)
         ->orderBy('bookings.booking_id', 'desc')
         ->find();
 
