@@ -84,4 +84,4 @@ pelanggan
 ```
 
 # Testing pembayaran
-jika ingin mencoba pembayaran midtrans kunjungi link berikut https://simulator.sandbox.midtrans.com/openapi/va/index
+jika ingin mencoba pembayaran midtrans kunjungi link berikut https://docs.midtrans.com/docs/testing-payment-on-sandbox#bank-transfer
