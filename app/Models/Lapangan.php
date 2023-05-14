@@ -55,7 +55,8 @@ class Lapangan extends Model
         $query = "SELECT l.nomor, l.harga, l.lapangan_id, j.tanggal, jm.jamMulai, jm.jamAkhir
         FROM lapangans l
         LEFT JOIN jadwals j ON j.id_lapangan = l.lapangan_id AND j.tanggal = '$tanggal'
-        LEFT JOIN jams jm ON j.id_jam = jm.jam_id AND jm.jamMulai = '$jam_mulai' AND jm.jamAkhir = '$jam_akhir'";
+        LEFT JOIN jams jm ON j.id_jam = jm.jam_id AND jm.jamMulai = '$jam_mulai' AND jm.jamAkhir = '$jam_akhir'
+        ORDER BY l.lapangan_id asc, jm.jamMulai desc";
         $result = $this->db->query($query)->getResultArray();
 
         $data = [];

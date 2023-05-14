@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Jadwal;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
@@ -57,6 +58,9 @@ abstract class BaseController extends Controller
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
+        $modelJadwalSelesai = new Jadwal();
+        $modelJadwalSelesai->jadwalSelesai();
+
         date_default_timezone_set('Asia/Jakarta');
 
         $this->validation = \Config\Services::validation();

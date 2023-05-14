@@ -99,16 +99,28 @@ class Jadwal extends Model
 
     public function jadwalSelesai()
     {
-        $dataJadwals = $this->join('jams', 'jadwals.id_jam = jams.jam_id')
-        // ->join('bookings', 'jadwals.jadwal_id = bookings.id_jadwal')
-        // ->join('pembayarans', 'pembayarans.id_booking = bookings.booking_id')
-        ->select('jadwals.jadwal_id, jadwals.id_lapangan, jams.jamAkhir, jadwals.tanggal, jadwals.status_booking')
+        $dataJadwals = $this->join('jams', 'jadwals.id_jam = jams.jam_id', 'left')
+        ->join('bookings', 'jadwals.jadwal_id = bookings.id_jadwal', 'left')
+        ->join('pembayarans', 'pembayarans.id_booking = bookings.booking_id', 'left')
+        ->select('jadwals.jadwal_id, jadwals.id_lapangan, jams.jamAkhir, jadwals.tanggal, jadwals.status_booking, pembayarans.status')
         ->where('jadwals.status_booking', 'Terboking')
         ->find();
         
         foreach ($dataJadwals as $data) {
+            if ($data['tanggal'] != date('Y-m-d')) {            
+                if ($data['status'] == 'Terbayar') {
+                    $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
+                } else {
+                    $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
+                }
+            }
+            
             if ($data['jamAkhir'] < date('H:i')) {
-                $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
+                if ($data['status'] == 'Terbayar') {
+                    $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
+                } else {
+                    $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
+                }
             }
         }
     }

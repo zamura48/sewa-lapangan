@@ -43,9 +43,6 @@ class Pembayaran extends Model
 
     public function getHistoris($idPelanggan)
     {
-        $modelJadwal = new Jadwal();
-        $modelJadwal->jadwalSelesai();
-
         $results = $this->join('bookings', 'pembayarans.id_booking = bookings.booking_id')
             ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
             ->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
