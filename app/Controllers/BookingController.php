@@ -129,6 +129,7 @@ class BookingController extends BaseController
         $modelPembayaraan = new Pembayaran();
         $modelUser = new User();
         $checkedChecboxs = $this->request->getVar('id');
+        $payment_method = $this->request->getVar('payment_method');
         $dataPelanggan = $modelUser->getPelanggan(session('username'));
         $modelBooking = $this->modelBooking->getCheckOutDataPesanan($checkedChecboxs, $dataPelanggan['pelanggan_id']);
 
@@ -147,7 +148,7 @@ class BookingController extends BaseController
                 $modelPembayaraan->save([
                     'kode_pembayaran' => $kodePemabayaran,
                     'id_booking' => $item['booking_id'],
-                    'payment_mehtod' => $modelBooking['harga'] == $this->request->getVar('dp') ? "Cash" : "DP"
+                    'payment_method' => $payment_method
                 ]);
 
                 $modelJadwal = new Jadwal();

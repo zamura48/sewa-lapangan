@@ -50,15 +50,26 @@
                                                     class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-lg-8 col-md-9">
-                                            <!-- <select name="" id="" class="form-control">
-                                            <option value="">Bayar Full</option>
-                                            <option value="">DP</option>
-                                        </select> -->
                                             <input type="text" class="form-control" id="dp" name="dp" required>
                                         </div>
                                     </div>
+                                    <div class="form-group row align-items center">
+                                        <div class="col-lg-4 col-3">
+                                            <label for="col-form-label">Methode Pembayaran <span
+                                                    class="text-danger">*</span></label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-9">
+                                            <select name="payment_method" id="payment_method" class="form-select"
+                                                required>
+                                                <option value="">-- Pilih Methode --</option>
+                                                <option value="CASH">CASH</option>
+                                                <option value="DP">DP</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="d-grid gap-2 mt-3">
-                                        <button type="submit" class="btn btn-warning" id="btnBayar" disabled>Bayar</button>
+                                        <button type="submit" class="btn btn-warning" id="btnBayar"
+                                            disabled>Bayar</button>
                                     </div>
                                 </form>
                             </div>
@@ -101,6 +112,7 @@
             $("#btnBayar").attr('disabled', true).text('').append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
 
             let dp = $("#dp").val();
+            let payment_method = $("#payment_method").val();
 
             $.ajax({
                 type: "POST",
@@ -108,6 +120,7 @@
                 data: {
                     'id': <?= $idLapangan ?>,
                     'dp': dp,
+                    'payment_method': payment_method,
                     'subTotal': <?= $subTotal ?>,
                     'tanggal': "<?= $tanggal ?>",
                     'jamMulai': "<?= $jamMulai ?>",
@@ -182,7 +195,7 @@
                 error: (response) => {
                     $("#btnBayar").attr('disabled', false).text('Bayar');
                     $(".spinner-border").remove();
-                    
+
                     Swal.fire({
                         icon: "error",
                         title: "Error",

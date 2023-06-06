@@ -50,6 +50,7 @@ class PembayaranController extends BaseController
         $tanggal = $this->request->getVar('tanggal');
         $jamMulai = $this->request->getVar('jamMulai');
         $jamAkhir = $this->request->getVar('jamAkhir');
+        $payment_method = $this->request->getVar('payment_method');
 
         $modelJam->save([
             'jamMulai' => $jamMulai,
@@ -86,7 +87,7 @@ class PembayaranController extends BaseController
             $modelPembayaraan->save([
                 'kode_pembayaran' => $kodePemabayaran,
                 'id_booking' => $modelBooking->getInsertID(),
-                'payment_method' => $harga == $subTotal ? "Cash" : "DP"
+                'payment_method' => $payment_method
             ]);
 
             $transaction = [
