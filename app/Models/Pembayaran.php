@@ -84,15 +84,14 @@ class Pembayaran extends Model
         $this->whereIn("id_booking", $idBooking)->delete();
     }
 
-    public function cancelBayarLangsung($idLapangan)
+    public function cancelBayarLangsung($id = [])
     {
-        $sql = "DELETE pembayarans, bookings, jadwals, jams FROM pembayarans
-        JOIN bookings ON pembayarans.id_booking = bookings.booking_id
-        JOIN jadwals ON bookings.id_jadwal = jadwals.jadwal_id
-        JOIN jams ON jadwals.id_jam = jams.jam_id
-        WHERE jadwals.id_lapangan = ?";
+        $this->db->table('pembayarans')->where('pembayaran_id', $id['id_pembayaran'])->delete();
+        $this->db->table('bookings')->where('booking_id', $id['id_booking'])->delete();
+        $this->db->table('jadwals')->where('jadwal_id', $id['id_jadwal'])->delete();
+        $this->db->table('jams')->where('jam_id', $id['id_jam'])->delete();
 
-        $this->db->query($sql, array($idLapangan));
+        // $this->db->query($sql, array($idLapangan));
     }
 
     public function getTotalPendapatanPerbulan($bulan = '', $tahun = '')

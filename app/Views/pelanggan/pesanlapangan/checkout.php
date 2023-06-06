@@ -89,6 +89,7 @@
         data-client-key="<?php echo getenv('midtrans.clientKey') ?>"></script>
     <script type="text/javascript">
         let redirect = "<?= base_url('pelanggan/histori') ?>";
+        let id_pembayaran, id_booking, id_jadwal, id_jam;
         // SnapToken acquired from previous step
 
         let inputDP = document.getElementById('dp');
@@ -128,6 +129,11 @@
                 },
                 dataType: "json",
                 success: function (response) {
+                    id_pembayaran = response['id_pembayaran'];
+                    id_booking = response['id_booking']; 
+                    id_jadwal = response['id_jadwals'];
+                    id_jam = response['id_jams'];
+
                     $("#btnBayar").attr('disabled', false).text('Bayar');
                     $(".spinner-border").remove();
 
@@ -135,8 +141,6 @@
                         // Optional
                         onSuccess: function (result) {
                             /* You may add your own js here, this is just example */
-                            alert("payment success!");
-                            console.log(result);
                             Swal.fire({
                                 title: 'Suksess',
                                 text: "Berhasil melakukan pembayaran!",
@@ -153,8 +157,6 @@
                         // Optional
                         onPending: function (result) {
                             /* You may add your own js here, this is just example */
-                            alert("wating your payment!");
-                            console.log(result);
                             Swal.fire({
                                 title: 'Peringatan',
                                 text: "Menunggu pembyaran dari anda!",
@@ -171,9 +173,7 @@
                         // Optional
                         onError: function (result) {
                             /* You may add your own js here, this is just example */
-                            alert("payment failed!");
-                            console.log(result);
-                            cancelPayment(<?= $idLapangan ?>);
+                            cancelPayment(id_pembayaran, id_booking, id_jadwal, id_jam);
                             Swal.fire({
                                 icon: "error",
                                 title: "Error",
@@ -182,7 +182,7 @@
                         },
                         onClose: function () {
                             // alert('you closed the popup without finishing the payment');
-                            cancelPayment(<?= $idLapangan ?>);
+                            cancelPayment(id_pembayaran, id_booking, id_jadwal, id_jam);
                             Swal.fire({
                                 icon: "warning",
                                 title: "Peringatan",
@@ -206,12 +206,16 @@
         });
 
 
-        function cancelPayment(idLapangan) {
+        function cancelPayment(id_pembayaran, id_booking, id_jadwal, id_jam) {
             $.ajax({
                 type: "post",
                 url: "<?= base_url('pelanggan/pesan-lapangan/checkout/payment/cancel') ?>",
                 data: {
-                    'id': <?= $idLapangan ?>,
+                    id_pembayaran: id_pembayaran,
+                    id_booking: id_booking,
+                    id_jadwal: id_jadwal,
+                    id_jam: id_jam,
+                    id_lapangan: <?= $idLapangan ?>,
                 },
                 dataType: "json",
                 success: function (response) {

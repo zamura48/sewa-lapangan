@@ -106,7 +106,13 @@ class PembayaranController extends BaseController
             $modelPembayaraan->db->transCommit();
 
             $snap_token = Snap::getSnapToken($transaction);
-            return response()->setStatusCode(200)->setJSON(['snap_token' => $snap_token]);
+            return response()->setStatusCode(200)->setJSON([
+                'snap_token' => $snap_token, 
+                'id_booking' => $modelBooking->getInsertID(), 
+                'id_pembayaran' => $modelPembayaraan->getInsertID(),
+                'id_jadwals' => $modelJadwal->getInsertID(),
+                'id_jams' => $modelJam->getInsertID()
+            ]);
         } catch (\Exception | DatabaseException $e) {
             $modelBooking->db->transRollback();
             $modelPembayaraan->db->transRollback();
@@ -120,12 +126,12 @@ class PembayaranController extends BaseController
         $modelLapangan = new Lapangan();
         $modelPembayaraan = new Pembayaran();
 
-        $idLapangan = $this->request->getVar('id');        
+        $get_data = $this->request->getPost();        
         
         try {
-            $modelPembayaraan->cancelBayarLangsung($idLapangan);
+            $modelPembayaraan->cancelBayarLangsung($get_data);
 
-            $modelLapangan->update($idLapangan, ['status' => 0]);
+            $modelLapangan->update($get_data['id_lapangan'], ['status' => 0]);
 
             return response()->setStatusCode(200)->setJSON(['success' => "Pembayaran dibatalkan"]);
         } catch (DatabaseException $e) {
