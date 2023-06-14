@@ -19,9 +19,14 @@ class DashboardController extends BaseController
 
     public function adminIndex()
     {
+        $total_harga = 0;
+        if (!empty($this->model_pembayaran->getTotalPendapatanPerbulan())) {
+            $total_harga = $this->model_pembayaran->getTotalPendapatanPerbulan()[0]->total_harga;
+        } 
+        
         return view('admin/dashboard/index', [
             'title' => 'Dashboard',
-            'pendapatan' => $this->model_pembayaran->getTotalPendapatanPerbulan()[0]->total_harga,
+            'pendapatan' => $total_harga,
             'total_lapangan' => $this->model_lapangan->getJumlahLapangan()[0]->total_lapangan
         ]);
     }
