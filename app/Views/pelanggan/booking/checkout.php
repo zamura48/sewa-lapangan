@@ -44,6 +44,20 @@
                                             </span>
                                         </div>
                                     </div>
+                                    <div class="form-group row align-items center">
+                                        <div class="col-lg-4 col-3">
+                                            <label for="col-form-label">Metode Pembayaran <span
+                                                    class="text-danger">*</span></label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-9">
+                                            <select name="payment_method" id="payment_method" class="form-select"
+                                                required>
+                                                <option value="">-- Pilih Metode --</option>
+                                                <option value="CASH">CASH</option>
+                                                <option value="DP">DP</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="form-group row align-items-center">
                                         <div class="col-lg-4 col-3">
                                             <label for="col-form-label">Pembayaran <span
@@ -51,19 +65,6 @@
                                         </div>
                                         <div class="col-lg-8 col-md-9">
                                             <input type="text" class="form-control" id="dp" name="dp" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row align-items center">
-                                        <div class="col-lg-4 col-3">
-                                            <label for="col-form-label">Methode Pembayaran <span
-                                                    class="text-danger">*</span></label>
-                                        </div>
-                                        <div class="col-lg-8 col-md-9">
-                                            <select name="payment_method" id="payment_method" class="form-select" required>
-                                                <option value="">-- Pilih Methode --</option>
-                                                <option value="CASH">CASH</option>
-                                                <option value="DP">DP</option>
-                                            </select>
                                         </div>
                                     </div>
                                     <div class="d-grid gap-2 mt-3">
@@ -89,18 +90,42 @@
         let redirect = "<?= base_url('pelanggan/histori') ?>";
         // SnapToken acquired from previous step
 
+        let subTotal = <?= $subTotal ?>;
         let inputDP = document.getElementById('dp');
         inputDP.addEventListener('blur', () => {
-            let minimalDP = <?= $subTotal ?> * 0.2;
-            if (inputDP.value <= minimalDP) {
+            let minimalDP = subTotal * 0.5;
+            if (inputDP.value < minimalDP) {
                 Swal.fire({
                     'title': 'Peringtan',
                     'icon': 'warning',
-                    'text': 'Minimal DP 20% dari sub total'
+                    'text': 'Minimal DP 50% dari sub total!'
                 });
                 $("#btnBayar").attr('disabled', true);
+            } else if (inputDP.value > subTotal) {
+                Swal.fire({
+                    'title': 'Peringtan',
+                    'icon': 'warning',
+                    'text': 'Pembayaran lebih dari sub total!'
+                });
+                $("#btnBayar").attr('disabled', true);
+            } else if (inputDP.value == subTotal) {
+                $("#btnBayar").attr('disabled', false);
             } else {
                 $("#btnBayar").attr('disabled', false);
+            }
+        });
+
+        $('#payment_method').change(function (e) {
+            e.preventDefault();
+            let this_val = $(this).val();
+            console.log(this_val);
+
+            if (this_val == 'CASH') {
+                inputDP.value = subTotal;
+                $("#btnBayar").attr('disabled', false);
+            } else {
+                inputDP.value = '';
+                $("#btnBayar").attr('disabled', true);
             }
         });
 
