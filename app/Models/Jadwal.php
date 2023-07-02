@@ -108,20 +108,29 @@ class Jadwal extends Model
         
         foreach ($dataJadwals as $data) {
             if ($data['tanggal'] != date('Y-m-d')) {            
-                if ($data['status'] == 'Terbayar') {
-                    $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
+                if ($data['jamAkhir'] < date('H:i')) {
+                    if ($data['status'] == 'Terbayar') {
+                        $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
+                    } else {
+                        $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
+                    }
                 } else {
-                    $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
+                    
+                    if ($data['status'] == 'Terbayar') {
+                        $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
+                    } else {
+                        $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
+                    }
                 }
             }
             
-            if ($data['jamAkhir'] < date('H:i')) {
-                if ($data['status'] == 'Terbayar') {
-                    $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
-                } else {
-                    $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
-                }
-            }
+            // if ($data['jamAkhir'] < date('H:i')) {
+            //     if ($data['status'] == 'Terbayar') {
+            //         $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
+            //     } else {
+            //         $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
+            //     }
+            // }
         }
     }
 }
