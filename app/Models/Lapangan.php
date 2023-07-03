@@ -56,6 +56,7 @@ class Lapangan extends Model
         FROM lapangans l
         LEFT JOIN jadwals j ON j.id_lapangan = l.lapangan_id AND j.tanggal = '$tanggal'
         LEFT JOIN jams jm ON j.id_jam = jm.jam_id AND jm.jamMulai = '$jam_mulai' AND jm.jamAkhir = '$jam_akhir'
+        WHERE l.status = 0
         ORDER BY l.lapangan_id asc, jm.jamMulai desc";
         $result = $this->db->query($query)->getResultArray();
 

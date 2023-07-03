@@ -65,7 +65,7 @@
                                                 <span aria-hidden="true">×</span>
                                             </button>
                                         </div>
-                                        <form action="<?= base_url('admin/lapangan/update/'. $data['lapangan_id']) ?>" method="post">
+                                        <form action="<?= base_url('owner/lapangan/update/'. $data['lapangan_id']) ?>" method="post">
                                             <div class="modal-body">
                                                 <div class="form-group">
                                                     <label for="">Nomor</label>

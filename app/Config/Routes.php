@@ -126,6 +126,9 @@ $routes->group('', ['filter' => 'authFilter'], function ($routes) {
                 'lapangan',
                 function ($routes) {
                         $routes->get('/', 'LapanganController::index');
+                        $routes->post('/', 'LapanganController::store');
+                        $routes->post('update/(:any)', 'LapanganController::update/$1');
+                        $routes->get('delete/(:any)', 'LapanganController::destroy/$1');
                     }
             );
 
