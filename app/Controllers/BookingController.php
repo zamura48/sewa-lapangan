@@ -175,7 +175,7 @@ class BookingController extends BaseController
             $snap_token = Snap::getSnapToken($transaction);
             return response()->setStatusCode(200)->setJSON(['snap_token' => $snap_token]);
         } catch (\Exception | DatabaseException $e) {
-            $this->db->transRollback();
+            $this->modelBooking->db->transRollback();
             $modelPembayaraan->db->transRollback();
 
             return response()->setStatusCode(501)->setJSON(['errors' => $e->getMessage()]);
@@ -210,6 +210,9 @@ class BookingController extends BaseController
     public function checkout()
     {
         $checkedChecboxs = $this->request->getVar('checkboxItem');
+        if (empty($checkedChecboxs)) {
+            return redirect()->to(base_url('pelanggan/keranjang'))->with('errors', 'Pilih item yang di keranjang terlebih dahulu.');
+        }
         $subTotal = $this->modelBooking->getSubTotal($checkedChecboxs, base64_decode(session('id')));
 
         return view('pelanggan/booking/checkout', [

@@ -25,13 +25,15 @@
                                                 name="checkboxItem[]" value="<?= $data['booking_id'] ?>">
                                         </td>
                                         <td>
-                                            Lapangan <?= $data['nomor'] ?>
+                                            Lapangan
+                                            <?= $data['nomor'] ?>
                                         </td>
                                         <td>
                                             <?= $data['tanggal'] ?>
                                         </td>
                                         <td>
-                                            <?= $data['jamMulai'] ?> - <?= $data['jamAkhir'] ?>
+                                            <?= $data['jamMulai'] ?> -
+                                            <?= $data['jamAkhir'] ?>
                                         </td>
                                         <td id="harga<?= $data['booking_id'] ?>" class="harga">
                                             <?= $data['harga'] ?>
@@ -39,7 +41,8 @@
                                         <td>
                                             <!-- <a href=""
                                                 class="btn btn-danger">Hapus</a> -->
-                                            <a class="btn btn-danger" onclick="alertDelete(<?= $data['booking_id']?>)">Hapus</a>
+                                            <a class="btn btn-danger"
+                                                onclick="alertDelete(<?= $data['booking_id'] ?>)">Hapus</a>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -66,7 +69,7 @@
                                 </div>
                             </div> -->
                             <div class="d-grid gap-2 mt-3">
-                                <button type="submit" class="btn btn-warning">Pembayaran</button>
+                                <button type="submit" class="btn btn-warning" id="btn-pembayaran">Pembayaran</button>
                             </div>
                         </div>
                     </div>
@@ -79,12 +82,19 @@
 
 <?= $this->section('js') ?>
 <script>
+
     let parentCheckbox = document.getElementById('checkboxAll');
     let subTotal = 0;
+
+    checkboxItem.addEventListener('change', e => {
+        console.log(e);
+    });
+
     parentCheckbox.addEventListener('change', e => {
         document.querySelectorAll('.form-check-input').forEach(checkbox => {
             checkbox.checked = e.target.checked;
         });
+
         if (e.target.checked == true) {
             document.querySelectorAll('.harga').forEach(harga => {
                 harga.innerHTML;
@@ -161,7 +171,7 @@
             confirmButtonText: 'Ya, hapus!'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "<?= base_url('pelanggan/keranjang/') ?>"+id+"/delete"
+                window.location.href = "<?= base_url('pelanggan/keranjang/') ?>" + id + "/delete"
             }
         })
     }
