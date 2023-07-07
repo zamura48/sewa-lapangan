@@ -78,6 +78,7 @@ $routes->group('', ['filter' => 'authFilter'], function ($routes) {
                 'pesanan',
                 function ($routes) {
                         $routes->get('/', 'PesananController::index');
+                        $routes->post('update/(:any)', 'PesananController::update/$1');
                     }
             );
 

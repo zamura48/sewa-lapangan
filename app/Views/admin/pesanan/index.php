@@ -38,7 +38,7 @@ $jumlah_array = count($explode);
                         <select class="form-control status_pembayaran" name="" data-allow-clear="true">
                             <option value=''>-- Pilih --</option>
                             <option value="Terbayar">Terbayar</option>
-                            <option value="Belum Terbayar">Belum Terbayar</option>
+                            <option value="Belum dibayar">Belum dibayar</option>
                         </select>
                     </div>
                 </div>
@@ -81,6 +81,8 @@ $jumlah_array = count($explode);
                                 <td class="align-middle text-center">
                                     <a class="btn btn-info" data-toggle="modal"
                                         data-target="#detailPesananModal<?= $data['booking_id'] ?>">Detail</a>
+                                    <a class="btn btn-warning" data-toggle="modal"
+                                        data-target="#ubahPesananModal<?= $data['booking_id'] ?>">Ubah Status</a>
                                 </td>
                             </tr>
 
@@ -194,6 +196,50 @@ $jumlah_array = count($explode);
                                 </div>
                             </div>
                             <!-- end modal -->
+
+                            <!-- ubah modal -->
+                            <div class="modal fade" id="ubahPesananModal<?= $data['booking_id'] ?>" tabindex="-1"
+                                role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable"
+                                    role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Ubah Pesanan</h5>
+                                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <form action="<?= base_url('admin/pesanan/update/' . $data['pembayaran_id']) ?>"
+                                            method="post">
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="">Status</label>
+                                                            <select class="form-control" name="status" id="status" required>
+                                                                <option value="Terbayar" <?= $data['status'] == "Terbayar" ? 'selected' : '' ?>>Terbayar</option>
+                                                                <option value="Belum dibayar" <?= $data['status'] == "Belum dibayar" ? 'selected' : '' ?>>Belum dibayar</option>
+                                                            </select>
+                                                            <!-- <input type="text" readonly class="form-control"
+                                                                value="<?= $data['status'] ?>"> -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- end modal body -->
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button"
+                                                    data-dismiss="modal">Tutup</button>
+                                                <button type="submit" class="btn btn-success" type="button">Simpan</button>
+                                            </div>
+                                        </form>
+                                        <!-- end modal footer -->
+                                        </form>
+                                        <!-- end form -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end modal -->
                         <?php } ?>
                     </tbody>
                 </table>
@@ -207,18 +253,18 @@ $jumlah_array = count($explode);
 <?= $this->section('js') ?>
 <script>
     function filterData(value, column) {
-        $('.table').DataTable().column(column).search( value == '' ? value : '^' + value + '$', true ,false).draw();
+        $('.table').DataTable().column(column).search(value == '' ? value : '^' + value + '$', true, false).draw();
     }
 
     $('.tipe_pembayaran').on('change', function () {
         let this_value = $(this).val();
-        
+
         filterData(this_value, 3);
     });
 
     $('.status_pembayaran').on('change', function () {
         let this_value = $(this).val();
-        
+
         filterData(this_value, 5);
     });
 

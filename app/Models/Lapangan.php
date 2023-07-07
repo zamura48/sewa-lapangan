@@ -52,12 +52,13 @@ class Lapangan extends Model
 
     public function getLapanganExist($tanggal = '', $jam_mulai = '', $jam_akhir = '')
     {
-        $query = "SELECT l.nomor, l.harga, l.lapangan_id, j.tanggal, jm.jamMulai, jm.jamAkhir, p.status
+        $query = "SELECT l.nomor, l.harga, l.lapangan_id, j.tanggal, jm.jamMulai, jm.jamAkhir
+        -- , p.status
         FROM lapangans l
         LEFT JOIN jadwals j ON j.id_lapangan = l.lapangan_id AND j.tanggal = '$tanggal'
         LEFT JOIN jams jm ON j.id_jam = jm.jam_id AND jm.jamMulai = '$jam_mulai' AND jm.jamAkhir = '$jam_akhir'
-        LEFT JOIN bookings b ON b.id_jadwal = j.jadwal_id
-        LEFT JOIN `pembayarans` p ON p.id_booking = b.booking_id
+        -- LEFT JOIN bookings b ON b.id_jadwal = j.jadwal_id
+        -- LEFT JOIN `pembayarans` p ON p.id_booking = b.booking_id
         WHERE l.status = 0
         ORDER BY l.lapangan_id asc, jm.jamMulai desc";
         $result = $this->db->query($query)->getResultArray();
@@ -67,7 +68,7 @@ class Lapangan extends Model
         $lapangan_id = 0;
 
         foreach ($result as $item) {
-            if ($item['jamMulai'] == null && $item['jamMulai'] == null || $item['status'] != 'Terbayar') {
+            if ($item['jamMulai'] == null && $item['jamMulai'] == null) {
                 if ($lapangan_id == 0) {
                     $lapangan_id = $item['lapangan_id'];
 

@@ -46,10 +46,9 @@ class Pembayaran extends Model
         $results = $this->join('bookings', 'pembayarans.id_booking = bookings.booking_id')
             ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
             ->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
-            ->select('pembayarans.pembayaran_id, pembayarans.kode_pembayaran, lapangans.nomor, jadwals.status_booking, jadwals.tanggal, pembayarans.status')
+            ->select('pembayarans.pembayaran_id, pembayarans.kode_pembayaran, lapangans.nomor, jadwals.status_booking, jadwals.tanggal, pembayarans.status, pembayarans.payment_type')
             ->where('bookings.id_pelanggan', $idPelanggan)
             ->find();
-
 
         $datas = array();
         foreach ($results as $result) {
@@ -62,17 +61,21 @@ class Pembayaran extends Model
             } elseif ($midtranStatus->transaction_status == 'failure') {
                 $transaction_status = 'Gagal';
             }
+
             
             $this->set(['status' => $transaction_status]);
             $this->where('kode_pembayaran', $result['kode_pembayaran']);
+            $this->where('payment_type', null);
             $this->update();
+            
+            $status = $result['payment_type'] ? $result['status'] : $transaction_status;
 
             $datas[] = [
                 'kode_pembayaran' => $result['kode_pembayaran'],
                 'nomor' => $result['nomor'],
                 'tanggal' => $result['tanggal'],
                 'status_booking' => $result['status_booking'],
-                'status_pembayaran' => $transaction_status
+                'status_pembayaran' => $status
             ];
         }
 
