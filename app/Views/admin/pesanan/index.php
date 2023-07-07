@@ -21,6 +21,28 @@ $jumlah_array = count($explode);
             </h4>
         </div>
         <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Pilih Tipe Pembayaran</label>
+                        <select class="form-control tipe_pembayaran" name="" data-allow-clear="true">
+                            <option value=''>-- Pilih --</option>
+                            <option value="CASH">CASH</option>
+                            <option value="DP">DP</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Pilih Status Pembayaran</label>
+                        <select class="form-control status_pembayaran" name="" data-allow-clear="true">
+                            <option value=''>-- Pilih --</option>
+                            <option value="Terbayar">Terbayar</option>
+                            <option value="Belum Terbayar">Belum Terbayar</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="table-responsive">
 
                 <table class="table table-bordered">
@@ -30,6 +52,7 @@ $jumlah_array = count($explode);
                         <th>Nama Pelanggan</th>
                         <th>Tipe Pembayaran</th>
                         <th>Sub Total</th>
+                        <th>Status</th>
                         <th>Aksi</th>
                     </thead>
                     <tbody>
@@ -51,6 +74,9 @@ $jumlah_array = count($explode);
                                 </td>
                                 <td class="align-middle">
                                     <?= "Rp. " . number_format($data['harga_total'], 0, ".", ","); ?>
+                                </td>
+                                <td class="align-middle">
+                                    <?= $data['status'] ?>
                                 </td>
                                 <td class="align-middle text-center">
                                     <a class="btn btn-info" data-toggle="modal"
@@ -180,6 +206,22 @@ $jumlah_array = count($explode);
 
 <?= $this->section('js') ?>
 <script>
+    function filterData(value, column) {
+        $('.table').DataTable().column(column).search( value == '' ? value : '^' + value + '$', true ,false).draw();
+    }
+
+    $('.tipe_pembayaran').on('change', function () {
+        let this_value = $(this).val();
+        
+        filterData(this_value, 3);
+    });
+
+    $('.status_pembayaran').on('change', function () {
+        let this_value = $(this).val();
+        
+        filterData(this_value, 5);
+    });
+
     $(document).ready(function () {
         $('.table').dataTable({
             responsive: true,
