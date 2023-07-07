@@ -108,7 +108,7 @@ class Jadwal extends Model
         
         foreach ($dataJadwals as $data) {
             // if ($data['tanggal'] != date('Y-m-d')) {            
-                if ($data['jamAkhir'] < date('H:i')) {
+                if ($data['jamAkhir'] < date('H:i')) {                    
                     if ($data['status'] == 'Terbayar') {
                         $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
                     } else {
