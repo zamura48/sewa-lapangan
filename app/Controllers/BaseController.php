@@ -59,7 +59,7 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
         $modelJadwalSelesai = new Jadwal();
-        $modelJadwalSelesai->jadwalSelesai();
+        // $modelJadwalSelesai->jadwalSelesai();
 
         date_default_timezone_set('Asia/Jakarta');
 

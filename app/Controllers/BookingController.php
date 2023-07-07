@@ -64,7 +64,6 @@ class BookingController extends BaseController
             'jamMulai' => $jamMulai,
             'jamAkhir' => $jamAkhir
         ]);
-
         
         $dataLapangan = $modelLapangan->where('lapangan_id', $id)->first();
         

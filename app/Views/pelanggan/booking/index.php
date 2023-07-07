@@ -86,10 +86,6 @@
     let parentCheckbox = document.getElementById('checkboxAll');
     let subTotal = 0;
 
-    checkboxItem.addEventListener('change', e => {
-        console.log(e);
-    });
-
     parentCheckbox.addEventListener('change', e => {
         document.querySelectorAll('.form-check-input').forEach(checkbox => {
             checkbox.checked = e.target.checked;

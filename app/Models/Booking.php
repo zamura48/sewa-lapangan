@@ -99,7 +99,7 @@ class Booking extends Model
     public function getDataPesananUsers($idUser)
     {
         $modelJadwal = new Jadwal();
-        $modelJadwal->jadwalSelesai();
+        // $modelJadwal->jadwalSelesai();
 
         $result = $this->join('pelanggans', 'bookings.id_pelanggan = pelanggans.pelanggan_id')
         ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
