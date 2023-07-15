@@ -84,7 +84,7 @@ class AuthController extends BaseController
             $validation = \Config\Services::validation();
             
             session();
-            return view('auth/register', ['validation' => $validation]);
+            return view('auth/register', ['title' => " | Registrasi", 'validation' => $validation]);
         } 
         
         $modelUser->save([
