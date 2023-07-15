@@ -37,7 +37,7 @@ $jumlah_array = count($explode);
                         <label>Pilih Status Pembayaran</label>
                         <select class="form-control status_pembayaran" name="" data-allow-clear="true">
                             <option value=''>-- Pilih --</option>
-                            <option value="Terbayar">Terbayar</option>
+                            <option value="Lunas">Lunas</option>
                             <option value="Belum dibayar">Belum dibayar</option>
                         </select>
                     </div>
@@ -217,7 +217,7 @@ $jumlah_array = count($explode);
                                                         <div class="form-group">
                                                             <label for="">Status</label>
                                                             <select class="form-control" name="status" id="status" required>
-                                                                <option value="Terbayar" <?= $data['status'] == "Terbayar" ? 'selected' : '' ?>>Terbayar</option>
+                                                                <option value="Lunas" <?= $data['status'] == "Lunas" ? 'selected' : '' ?>>Lunas</option>
                                                                 <option value="Belum dibayar" <?= $data['status'] == "Belum dibayar" ? 'selected' : '' ?>>Belum dibayar</option>
                                                             </select>
                                                             <!-- <input type="text" readonly class="form-control"

@@ -44,7 +44,7 @@
                                             <?php } ?>
                                         </td>
                                         <td>
-                                            <?php if ($data['status_pembayaran'] == 'Terbayar') { ?>
+                                            <?php if ($data['status_pembayaran'] == 'Lunas') { ?>
                                                 <span class="badge bg-success text-white">
                                                     <?= $data['status_pembayaran'] ?>
                                                 </span>

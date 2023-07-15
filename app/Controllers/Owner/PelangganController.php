@@ -18,7 +18,7 @@ class PelangganController extends BaseController
     {
         return view('owner/pelanggan/index', [
             'title' => "Pelanggan",
-            'datas' => $this->modelPelanggan->join('users', 'pelanggans.id_user = users.user_id')->find()
+            'datas' => $this->modelPelanggan->join('users', 'pelanggans.id_user = users.user_id')->whereNotIn('nama', ['Admin', 'Owner'])->find()
         ]);
     }
 }

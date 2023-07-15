@@ -46,40 +46,54 @@ class Pembayaran extends Model
         $results = $this->join('bookings', 'pembayarans.id_booking = bookings.booking_id')
             ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
             ->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
-            ->select('pembayarans.pembayaran_id, pembayarans.kode_pembayaran, lapangans.nomor, jadwals.status_booking, jadwals.tanggal, pembayarans.status, pembayarans.payment_type')
+            ->select('pembayarans.pembayaran_id, pembayarans.kode_pembayaran, pembayarans.payment_method, lapangans.nomor, jadwals.status_booking, jadwals.tanggal, pembayarans.status, pembayarans.payment_type')
             ->where('bookings.id_pelanggan', $idPelanggan)
             ->find();
 
         $datas = array();
         foreach ($results as $result) {
-            $midtranStatus = Transaction::status($result['kode_pembayaran']);
-            $transaction_status = '';
-            if ($midtranStatus->transaction_status == 'settlement') {
-                $transaction_status = 'Terbayar';
-            } elseif ($midtranStatus->transaction_status == 'pending') {
-                $transaction_status = 'Belum dibayar';
-            } elseif ($midtranStatus->transaction_status == 'failure') {
-                $transaction_status = 'Gagal';
-            }
-
-            
-            $this->set(['status' => $transaction_status]);
-            $this->where('kode_pembayaran', $result['kode_pembayaran']);
-            $this->where('payment_type', null);
-            $this->update();
-            
-            $status = $result['payment_type'] ? $result['status'] : $transaction_status;
-
             $datas[] = [
                 'kode_pembayaran' => $result['kode_pembayaran'],
                 'nomor' => $result['nomor'],
                 'tanggal' => $result['tanggal'],
                 'status_booking' => $result['status_booking'],
-                'status_pembayaran' => $status
+                'status_pembayaran' => $result['status']
             ];
         }
 
         return $datas;
+    }
+
+    public function perbaruiPembyaran()
+    {
+        $results = $this->join('bookings', 'pembayarans.id_booking = bookings.booking_id')
+            ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
+            ->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
+            ->select('pembayarans.pembayaran_id, pembayarans.kode_pembayaran, pembayarans.payment_method, lapangans.nomor, jadwals.status_booking, jadwals.tanggal, pembayarans.status, pembayarans.payment_type')
+            ->find();
+
+        foreach ($results as $result) {
+            if ($result['status'] != 'Lunas') {
+                $midtranStatus = Transaction::status($result['kode_pembayaran']);
+                $transaction_status = '';
+                if ($midtranStatus->transaction_status == 'settlement') {
+                    if ($result['payment_method'] == 'CASH') {
+                        $transaction_status = 'Lunas';
+                    } else {
+                        $transaction_status = 'DP Terbayar';
+                    }
+                } elseif ($midtranStatus->transaction_status == 'pending') {
+                    $transaction_status = 'Belum dibayar';
+                } elseif ($midtranStatus->transaction_status == 'failure') {
+                    $transaction_status = 'Gagal';
+                }
+
+                $this->set(['status' => $transaction_status]);
+                $this->where('kode_pembayaran', $result['kode_pembayaran']);
+                $this->where('payment_type', null);
+                $this->update();
+            }     
+        }
     }
 
     public function cancelPayment($idBooking)
@@ -106,7 +120,7 @@ class Pembayaran extends Model
         FROM pembayarans p
         INNER JOIN bookings b ON b.booking_id = p.id_booking
         INNER JOIN jadwals j ON j.jadwal_id = b.id_jadwal AND MONTH(j.tanggal) = ? AND YEAR(j.tanggal) = ?
-        WHERE p.status = 'Terbayar'
+        WHERE p.status = 'Lunas'
         GROUP BY MONTH(j.tanggal)";
 
         return $this->db->query($query, [$get_bulan, $get_tahun])->getResult();

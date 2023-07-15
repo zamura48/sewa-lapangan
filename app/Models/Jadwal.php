@@ -109,14 +109,14 @@ class Jadwal extends Model
         foreach ($dataJadwals as $data) {
             // if ($data['tanggal'] != date('Y-m-d')) {            
                 if ($data['jamAkhir'] < date('H:i')) {                    
-                    if ($data['status'] == 'Terbayar') {
+                    if ($data['status'] == 'Lunas') {
                         $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
                     } else {
                         $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
                     }
                 } 
                 // else {                    
-                    // if ($data['status'] == 'Terbayar') {
+                    // if ($data['status'] == 'Lunas') {
                     //     $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
                     // } else {
                     //     $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
@@ -125,7 +125,7 @@ class Jadwal extends Model
             // }
             
             // if ($data['jamAkhir'] < date('H:i')) {
-            //     if ($data['status'] == 'Terbayar') {
+            //     if ($data['status'] == 'Lunas') {
             //         $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
             //     } else {
             //         $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);

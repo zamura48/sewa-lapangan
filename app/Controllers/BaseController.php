@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Jadwal;
+use App\Models\Pembayaran;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
@@ -61,9 +62,10 @@ abstract class BaseController extends Controller
         date_default_timezone_set('Asia/Jakarta');
         
         $modelJadwalSelesai = new Jadwal();
+        $modelPembayaran = new Pembayaran();
         $modelJadwalSelesai->jadwalSelesai();
-
-
+        
+        
         $this->validation = \Config\Services::validation();
         $this->session = \Config\Services::session();
         Config::$serverKey = getenv('midtrans.serverKey');
@@ -71,6 +73,8 @@ abstract class BaseController extends Controller
         // Config::$isProduction = getenv('midtrans.isProduction');
         Config::$isSanitized = getenv('midtrans.isSanitized');
         Config::$is3ds = getenv('midtrans.is3ds');
+        
+        $modelPembayaran->perbaruiPembyaran();
     }
 
     public function hargaPerjam($jamMulai, $jamAkhir, $harga)

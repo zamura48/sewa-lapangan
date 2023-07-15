@@ -75,6 +75,7 @@
                     </div>
                     <br>
                     <h5>Ubah Password</h5>
+                    <small class="text-danger">Kosongkan jika tidak merubah password.</small>
                     <div class="form-group">
                         <label for="">Password Lama</label>
                         <input type="password" class="form-control" name="passwordLama">

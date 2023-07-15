@@ -21,7 +21,7 @@ class LaporanPemesananController extends BaseController
     {
         return view('owner/laporan_pemesanan/index', [
             'title' => "Laporan Pemesanan",
-            'datas' => $this->modelBooking->getDataPesananTerbayar("Terbayar")
+            'datas' => $this->modelBooking->getDataPesananTerbayar("Lunas")
         ]);
     }
 

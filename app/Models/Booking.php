@@ -72,7 +72,7 @@ class Booking extends Model
         ->join('jams', 'jadwals.id_jam = jams.jam_id')
         ->join('pembayarans', 'pembayarans.id_booking = bookings.booking_id')
         ->select('bookings.*, jadwals.*, lapangans.*, jams.*, bookings.harga as harga_total, pembayarans.*, pembayarans.status as pembayaran_status, pelanggans.*')
-        ->where('pembayarans.status', 'Terbayar')
+        ->where('pembayarans.status', 'Lunas')
         ->orderBy('bookings.booking_id', "desc");
 
         if ($tanggal_mulai != '' && $tanggal_akhir != '') {
