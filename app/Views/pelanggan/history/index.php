@@ -56,6 +56,10 @@
                                                 <span class="badge bg-danger text-white">
                                                     <?= $data['status_pembayaran'] ?>
                                                 </span>
+                                            <?php } elseif ($data['status_pembayaran'] == 'DP') { ?>
+                                                <span class="badge bg-info text-white">
+                                                    <?= $data['status_pembayaran'] ?>
+                                                </span>
                                             <?php } ?>
                                         </td>
                                     </tr>
