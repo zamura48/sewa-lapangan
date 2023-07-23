@@ -30,21 +30,21 @@ class PembayaranController extends BaseController
             'title' => " | Checkout",
             'subTotal' => $subTotal,
             'idLapangan' => $id,
-            'tanggal' => $tanggal, 
-            'jamMulai' => $jamMulai, 
+            'tanggal' => $tanggal,
+            'jamMulai' => $jamMulai,
             'jamAkhir' => $jamAkhir
         ]);
     }
 
     public function payment()
-    {        
+    {
         $modelBooking = new Booking();
         $modelJadwal = new Jadwal();
         $modelJam = new Jam();
         $modelLapangan = new Lapangan();
         $modelPembayaraan = new Pembayaran();
         $modelUser = new User();
-        
+
         $idLapangan = $this->request->getVar('id');
         $idPelanggan = base64_decode(session('id'));
         $subTotal = $this->request->getVar('subTotal');
@@ -112,8 +112,8 @@ class PembayaranController extends BaseController
 
             $snap_token = Snap::getSnapToken($transaction);
             return response()->setStatusCode(200)->setJSON([
-                'snap_token' => $snap_token, 
-                'id_booking' => $modelBooking->getInsertID(), 
+                'snap_token' => $snap_token,
+                'id_booking' => $modelBooking->getInsertID(),
                 'id_pembayaran' => $modelPembayaraan->getInsertID(),
                 'id_jadwals' => $modelJadwal->getInsertID(),
                 'id_jams' => $modelJam->getInsertID()
@@ -128,43 +128,53 @@ class PembayaranController extends BaseController
 
     public function paymentContinue($kodePembayaran)
     {
+        try {
+            Transaction::cancel($kodePembayaran);
+
+            $transaction = $this->createTransaction($kodePembayaran);
+
+            $snap_token = Snap::getSnapToken($transaction);
+            return response()->setStatusCode(200)->setJSON([
+                'snap_token' => $snap_token,
+            ]);
+        } catch (\Exception $e) {
+            $transaction = $this->createTransaction($kodePembayaran);
+
+            $snap_token = Snap::getSnapToken($transaction);
+            return response()->setStatusCode(200)->setJSON([
+                'snap_token' => $snap_token,
+            ]);
+        }
+    }
+
+    private function createTransaction($kodePembayaran)
+    {
         $modelPembayaraan = new Pembayaran();
 
         $data = $modelPembayaraan->getPembayaran($kodePembayaran);
 
-        try {            
-            Transaction::cancel($kodePembayaran);
+        $newKodePembayaran = "TRX-" . date('Ymd') . rand('100', '999');
+        $modelPembayaraan->update($data['pembayaran_id'], [
+            'kode_pembayaran' => $newKodePembayaran
+        ]);
 
-            $newKodePembayaran = "TRX-" . date('Ymd') . rand('100', '999');
-            $modelPembayaraan->update($data['pembayaran_id'], [
-                'kode_pembayaran' => $newKodePembayaran
-            ]);
+        $transaction = [
+            'transaction_details' => [
+                'order_id' => $newKodePembayaran,
+                'gross_amount' => $data['subtotal']
+            ],
+            'customer_details' => [
+                'first_name' => $data['nama'],
+                'email' => $data['email'],
+                'phone' => $data['noHp']
+            ],
+            "expiry" => [
+                "unit" => "hours",
+                "duration" => 6
+            ]
+        ];
 
-            $transaction = [
-                'transaction_details' => [
-                    'order_id' => $newKodePembayaran,
-                    'gross_amount' => $data['subtotal']
-                ],
-                'customer_details' => [
-                    'first_name' => $data['nama'],
-                    'email' => $data['email'],
-                    'phone' => $data['noHp']
-                ],
-                "expiry" => [
-                    "unit" => "hours",
-                    "duration" => 6
-                ]
-            ];
-
-            $snap_token = Snap::getSnapToken($transaction);
-            return response()->setStatusCode(200)->setJSON([
-                'snap_token' => $snap_token, 
-            ]);          
-        } catch (\Exception $e) {
-            return response()->setStatusCode(200)->setJSON([
-                'message' => $e->getMessage(), 
-            ]);
-        }
+        return $transaction;
     }
 
     public function paymentCancel()
@@ -172,8 +182,8 @@ class PembayaranController extends BaseController
         $modelLapangan = new Lapangan();
         $modelPembayaraan = new Pembayaran();
 
-        $get_data = $this->request->getPost();        
-        
+        $get_data = $this->request->getPost();
+
         try {
             $modelPembayaraan->cancelBayarLangsung($get_data);
 
