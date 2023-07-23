@@ -71,4 +71,13 @@
             <span>Laporan Pemesanan</span></a>
     </li>
 
+    <!-- Nav Item - Pesanan -->
+    <li class="nav-item <?php if ($title == "Laporan Keuangan") { ?>
+        active
+    <?php } ?>">
+        <a class="nav-link" href="<?= base_url(strtolower(session('role')) . '/laporan-keuangan') ?>">
+            <i class="fas fa-fw fa-file"></i>
+            <span>Laporan Keuangan</span></a>
+    </li>
+
 </ul>

@@ -25,6 +25,7 @@
     <!-- datatable -->
     <link href="<?= base_url() ?>/assets/vendor/datatable/datatables.min.css">
     <link href="<?= base_url() ?>/assets/vendor/datatable/Bootstrap-4-4.6.0/css/bootstrap.min.css">
+    <link href="<?= base_url() ?>/assets/vendor/datepicker/bootstrap-datepicker.min.css">
 
     <!-- sweetalert -->
     <link rel="stylesheet" href="<?= base_url('mazer/assets/vendors/sweetalert2/sweetalert2.min.css') ?>">
@@ -81,6 +82,7 @@
     <!-- datatable -->
     <script src="<?= base_url() ?>/assets/vendor/datatable/datatables.min.js"></script>
     <script src="<?= base_url() ?>/assets/vendor/datatable/Bootstrap-4-4.6.0/js/bootstrap.min.js"></script>
+    <script src="<?= base_url() ?>/assets/vendor/datepicker/bootstrap-datepicker.min.js"></script>
 
     <!-- sweetallert -->
     <script src="<?= base_url('mazer/assets/vendors/sweetalert2/sweetalert2.all.min.js') ?>"></script>

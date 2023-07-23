@@ -26,4 +26,11 @@ class HistoriController extends BaseController
             'datas' => $datas
         ]);
     }
+
+    public function invoice($id) 
+    {
+        return view('pelanggan/history/invoice', [
+            'datas' => $this->model->getInvoice($id)
+        ]);
+    }
 }

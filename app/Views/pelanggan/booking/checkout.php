@@ -159,8 +159,6 @@
                         // Optional
                         onSuccess: function (result) {
                             /* You may add your own js here, this is just example */
-                            alert("payment success!");
-                            console.log(result);
                             Swal.fire({
                                 title: 'Suksess',
                                 text: "Berhasil melakukan pembayaran!",
@@ -177,8 +175,6 @@
                         // Optional
                         onPending: function (result) {
                             /* You may add your own js here, this is just example */
-                            alert("wating your payment!");
-                            console.log(result);
                             Swal.fire({
                                 title: 'Peringatan',
                                 text: "Menunggu pembyaran dari anda!",
@@ -195,8 +191,6 @@
                         // Optional
                         onError: function (result) {
                             /* You may add your own js here, this is just example */
-                            alert("payment failed!");
-                            console.log(result);
                             cancelPayment(cbCheckeds);
                             Swal.fire({
                                 icon: "error",

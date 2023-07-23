@@ -34,7 +34,8 @@ class DashboardController extends BaseController
     public function pelangganIndex()
     {
         return view('pelanggan/pesanlapangan/index', [
-            'title' => " | Pesan Lapangan"
+            'title' => " | Pesan Lapangan",
+            'lapangan_booked' => $this->model_lapangan->getLapanganWithJadwals(),
         ]);
     }
 }

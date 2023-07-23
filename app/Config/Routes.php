@@ -89,6 +89,14 @@ $routes->group('', ['filter' => 'authFilter'], function ($routes) {
                         $routes->post('export-excel', 'LaporanPemesananController::exportExcel');
                     }
             );
+
+            $routes->group(
+                'laporan-keuangan',
+                function ($routes) {
+                        $routes->get('/', 'LaporanKeuangan::index');
+                        $routes->post('export-excel', 'LaporanKeuangan::exportExcel');
+                    }
+            );
         }
     );
     // end routing admin
@@ -140,6 +148,14 @@ $routes->group('', ['filter' => 'authFilter'], function ($routes) {
                         $routes->post('export-excel', 'LaporanPemesananController::exportExcel');
                     }
             );
+
+            $routes->group(
+                'laporan-keuangan',
+                function ($routes) {
+                        $routes->get('/', 'LaporanKeuangan::index');
+                        $routes->post('export-excel', 'LaporanKeuangan::exportExcel');
+                    }
+            );
         }
     );
     // end routing owner
@@ -185,6 +201,8 @@ $routes->group('', ['filter' => 'authFilter'], function ($routes) {
             );
 
             $routes->get('histori', 'HistoriController::index');
+            $routes->get('continue-payment/(:any)', 'PembayaranController::paymentContinue/$1');
+            $routes->get('invoice/(:any)', 'HistoriController::invoice/$1');
 
             $routes->group('profil', function ($routes) {
                 $routes->get('(:any)', 'UserController::profil');

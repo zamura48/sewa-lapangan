@@ -164,6 +164,10 @@ class BookingController extends BaseController
                     'email' => $dataPelanggan['email'],
                     'phone' => $dataPelanggan['noHp']
                 ],
+                "expiry" => [
+                    "unit" => "hours",
+                    "duration" => 6
+                ]
             ];
 
             $this->modelBooking->db->transCommit();

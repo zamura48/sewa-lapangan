@@ -63,8 +63,7 @@ abstract class BaseController extends Controller
         
         $modelJadwalSelesai = new Jadwal();
         $modelPembayaran = new Pembayaran();
-        $modelJadwalSelesai->jadwalSelesai();
-        
+        $modelJadwalSelesai->jadwalSelesai();        
         
         $this->validation = \Config\Services::validation();
         $this->session = \Config\Services::session();
@@ -74,7 +73,11 @@ abstract class BaseController extends Controller
         Config::$isSanitized = getenv('midtrans.isSanitized');
         Config::$is3ds = getenv('midtrans.is3ds');
         
-        $modelPembayaran->perbaruiPembyaran();
+        try {
+            $modelPembayaran->perbaruiPembyaran();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     public function hargaPerjam($jamMulai, $jamAkhir, $harga)

@@ -37,7 +37,7 @@
                                 </td>
                                 <td class="align-middle">
                                     <?php if ($data['status'] == 1) { ?>
-                                        <span class="bg-danger text-white p-2 rounded">Repair</span>
+                                        <span class="bg-danger text-white p-2 rounded">Maintace</span>
                                     <?php } else { ?>
                                         <span class="bg-success text-white p-2 rounded">Ready</span>
                                     <?php } ?>
@@ -80,7 +80,7 @@
                                                         <?php } ?>>Ready</option>
                                                         <option value="1" <?php if ($data['status'] == 1) { ?>
                                                             selected
-                                                        <?php } ?>>Repair</option>
+                                                        <?php } ?>>Maintace</option>
                                                     </select>
                                                 </div>
                                             </div>

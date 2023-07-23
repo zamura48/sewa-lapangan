@@ -55,8 +55,8 @@ class Lapangan extends Model
         $query = "SELECT l.nomor, l.harga, l.lapangan_id, j.tanggal, jm.jamMulai, jm.jamAkhir
         -- , p.status
         FROM lapangans l
-        LEFT JOIN jadwals j ON j.id_lapangan = l.lapangan_id AND j.tanggal = '$tanggal'
-        LEFT JOIN jams jm ON j.id_jam = jm.jam_id AND jm.jamMulai = '$jam_mulai' AND jm.jamAkhir = '$jam_akhir'
+        LEFT JOIN jadwals j ON j.id_lapangan = l.lapangan_id AND j.tanggal = '$tanggal' AND j.status_booking != 'Batal'
+        LEFT JOIN jams jm ON j.id_jam = jm.jam_id AND jm.jamMulai BETWEEN '$jam_mulai' AND '$jam_akhir' AND jm.jamAkhir BETWEEN '$jam_mulai' AND '$jam_akhir'
         -- LEFT JOIN bookings b ON b.id_jadwal = j.jadwal_id
         -- LEFT JOIN `pembayarans` p ON p.id_booking = b.booking_id
         WHERE l.status = 0
@@ -132,6 +132,33 @@ class Lapangan extends Model
 
                 $row['jadwal'][] = $rw;
             }
+
+            $result[] = $row;
+        }
+
+        return $result;
+    }
+
+    public function getLapanganWithJadwals()
+    {
+
+        $query = "SELECT lapangans.nomor, jadwals.tanggal, jams.jamMulai, jams.jamAkhir
+    FROM jadwals
+    left JOIN jams ON jadwals.id_jam = jams.jam_id
+    left JOIN lapangans ON jadwals.id_lapangan = lapangans.lapangan_id
+    WHERE jadwals.tanggal = CURDATE() and jadwals.status_booking != 'Batal'
+    ORDER BY jams.jam_id asc";
+
+        $get_jadwals = $this->db->query($query)->getResultArray();
+
+        $result = [];
+        foreach ($get_jadwals as $item) {
+
+            $row = [];
+            $row['nomor'] = $item['nomor'];
+            $row['tanggal'] = $item['tanggal'];
+            $row['jamMulai'] = $item['jamMulai'];
+            $row['jamAkhir'] = $item['jamAkhir'];
 
             $result[] = $row;
         }

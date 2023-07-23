@@ -86,13 +86,6 @@ class JadwalController extends BaseController
         return redirect()->to(base_url('admin/jadwal'))->with('success', "Berhasil menghapus data jadwal!");
     }
 
-    public function indexJadwal()
-    {
-        return view('pelanggan/jadwal/index', [
-            'datas' => $this->model->getJadwalWithLapanganAndJams()
-        ]);
-    }
-
     // Pelanggan Method
     public function getLapanganExist()
     {
@@ -126,6 +119,7 @@ class JadwalController extends BaseController
 
         return view('pelanggan/pesanlapangan/index', [
             'title' => ' | Pesan Lapangan',
+            'lapangan_booked' => $modelLapangan->getLapanganWithJadwals(),
             'datas' => $modelLapangan->getLapanganExist($tanggal, $jamMulai, $jamAkhir),
             'tanggal' => $tanggal,
             'jamMulai' => $jamMulai,

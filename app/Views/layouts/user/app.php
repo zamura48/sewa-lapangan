@@ -16,6 +16,9 @@
     <link rel="stylesheet" href="<?= base_url('mazer/assets/css/app.css') ?>">
     <link rel="stylesheet" href="<?= base_url('customcss.css') ?>">
     <link rel="stylesheet" href="<?= base_url('mazer/assets/vendors/fontawesome/all.min.css') ?>">
+    <!-- datatable -->
+    <link href="<?= base_url() ?>/assets/vendor/datatable/datatables.min.css">
+    <link href="<?= base_url() ?>/assets/vendor/datatable/Bootstrap-4-4.6.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 </head>
 
@@ -130,6 +133,10 @@
     <script src="<?= base_url('mazer/assets/js/extensions/sweetalert2.js') ?>"></script>
 
     <script src="<?= base_url('mazer/assets/js/main.js') ?>"></script>
+
+    <!-- datatable -->
+    <script src="<?= base_url() ?>/assets/vendor/datatable/datatables.min.js"></script>
+    <script src="<?= base_url() ?>/assets/vendor/datatable/Bootstrap-4-4.6.0/js/bootstrap.min.js"></script>
     <?= $this->renderSection('js') ?>
 </body>
 

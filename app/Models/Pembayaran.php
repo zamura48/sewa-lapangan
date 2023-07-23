@@ -45,17 +45,21 @@ class Pembayaran extends Model
     {
         $results = $this->join('bookings', 'pembayarans.id_booking = bookings.booking_id')
             ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
+            ->join('jams', 'jadwals.id_jam = jams.jam_id')
             ->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
-            ->select('pembayarans.pembayaran_id, pembayarans.kode_pembayaran, pembayarans.payment_method, lapangans.nomor, jadwals.status_booking, jadwals.tanggal, pembayarans.status, pembayarans.payment_type')
+            ->select('pembayarans.pembayaran_id, pembayarans.pembayaran_id, pembayarans.kode_pembayaran, pembayarans.payment_method, lapangans.nomor, jadwals.status_booking, jams.jamMulai, jams.jamAkhir, jadwals.tanggal, pembayarans.status, pembayarans.payment_type')
             ->where('bookings.id_pelanggan', $idPelanggan)
+            ->orderBy('pembayarans.pembayaran_id', 'desc')
             ->find();
 
         $datas = array();
         foreach ($results as $result) {
             $datas[] = [
+                'pembayaran_id' => $result['pembayaran_id'],
                 'kode_pembayaran' => $result['kode_pembayaran'],
                 'nomor' => $result['nomor'],
                 'tanggal' => $result['tanggal'],
+                'jam' => $result['jamMulai'] . ' - ' . $result['jamAkhir'],
                 'status_booking' => $result['status_booking'],
                 'status_pembayaran' => $result['status']
             ];
@@ -64,16 +68,57 @@ class Pembayaran extends Model
         return $datas;
     }
 
-    public function perbaruiPembyaran()
+    public function getInvoice($pembayaran_id)
     {
-        $results = $this->join('bookings', 'pembayarans.id_booking = bookings.booking_id')
-            ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id')
-            ->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id')
-            ->select('pembayarans.pembayaran_id, pembayarans.kode_pembayaran, pembayarans.payment_method, lapangans.nomor, jadwals.status_booking, jadwals.tanggal, pembayarans.status, pembayarans.payment_type')
+        $dataBooking = $this->join('bookings', 'pembayarans.id_booking = bookings.booking_id', 'left')
+            ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id', 'left')
+            ->join('jams', 'jadwals.id_jam = jams.jam_id', 'left')
+            ->join('lapangans', 'jadwals.id_lapangan = lapangans.lapangan_id', 'left')
+            ->select('pembayarans.pembayaran_id, pembayarans.pembayaran_id, pembayarans.kode_pembayaran, pembayarans.payment_method, lapangans.nomor, jadwals.status_booking, jams.jamMulai, jams.jamAkhir, jadwals.tanggal, pembayarans.status, pembayarans.payment_type, bookings.harga, bookings.subtotal')
+            ->where('pembayarans.pembayaran_id', $pembayaran_id)
             ->find();
 
+        $dataPembayaran = $this->join('bookings', 'pembayarans.id_booking = bookings.booking_id', 'left')
+            ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id', 'left')
+            ->join('pelanggans', 'bookings.id_pelanggan = pelanggans.pelanggan_id', 'left')
+            ->select('pembayarans.kode_pembayaran, jadwals.tanggal, pelanggans.nama')
+            ->where('pembayarans.pembayaran_id', $pembayaran_id)
+            ->find();
+
+        return [$dataBooking, $dataPembayaran];
+    }
+
+    public function getPembayaran($kodePembayaran)
+    {
+        $dataPembayaran = $this->join('bookings', 'pembayarans.id_booking = bookings.booking_id', 'left')
+            ->join('jadwals', 'bookings.id_jadwal = jadwals.jadwal_id', 'left')
+            ->join('pelanggans', 'bookings.id_pelanggan = pelanggans.pelanggan_id', 'left')
+            ->join('users', 'pelanggans.id_user = users.user_id', 'left')
+            ->select('pembayarans.pembayaran_id, pembayarans.kode_pembayaran, jadwals.tanggal, pelanggans.nama, pelanggans.noHp, users.email, bookings.subtotal, pembayarans.no_rek')
+            ->where('pembayarans.kode_pembayaran', $kodePembayaran)
+            ->find();
+
+        $data = [];
+        foreach ($dataPembayaran as $value) {
+            $data['pembayaran_id'] = $value['pembayaran_id'];
+            $data['kode_pembayaran'] = $value['kode_pembayaran'];
+            $data['kode_pembayaran'] = $value['kode_pembayaran'];
+            $data['nama'] = $value['nama'];
+            $data['noHp'] = $value['noHp'];
+            $data['email'] = $value['email'];
+            $data['subtotal'] = $value['subtotal'];
+            break;
+        }
+
+        return $data;
+    }
+
+    public function perbaruiPembyaran()
+    {
+        $results = $this->select('kode_pembayaran, status, no_rek')->find();
+
         foreach ($results as $result) {
-            if ($result['status'] != 'Lunas') {
+            if ($result['status'] != 'Lunas' && $result['status'] != 'DP Terbayar' && $result['status'] != 'Cancel') {
                 $midtranStatus = Transaction::status($result['kode_pembayaran']);
                 $transaction_status = '';
                 if ($midtranStatus->transaction_status == 'settlement') {
@@ -86,13 +131,23 @@ class Pembayaran extends Model
                     $transaction_status = 'Belum dibayar';
                 } elseif ($midtranStatus->transaction_status == 'failure') {
                     $transaction_status = 'Gagal';
+                } else {
+                    $transaction_status = 'Cancel';
                 }
 
                 $this->set(['status' => $transaction_status]);
                 $this->where('kode_pembayaran', $result['kode_pembayaran']);
                 $this->where('payment_type', null);
                 $this->update();
-            }     
+            }
+
+            if (empty($result['no_rek'])) {
+                $midtranStatus = Transaction::status($result['kode_pembayaran']);
+
+                $this->set(['no_rek' => $midtranStatus->transaction_time]);
+                $this->where('kode_pembayaran', $result['kode_pembayaran']);
+                $this->update();
+            }
         }
     }
 

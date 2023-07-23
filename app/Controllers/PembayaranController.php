@@ -11,6 +11,7 @@ use App\Models\Pembayaran;
 use App\Models\User;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use Midtrans\Snap;
+use Midtrans\Transaction;
 
 class PembayaranController extends BaseController
 {
@@ -100,6 +101,10 @@ class PembayaranController extends BaseController
                     'email' => $dataPelanggan['email'],
                     'phone' => $dataPelanggan['noHp']
                 ],
+                "expiry" => [
+                    "unit" => "hours",
+                    "duration" => 6
+                ]
             ];
 
             $modelBooking->db->transCommit();
@@ -118,6 +123,47 @@ class PembayaranController extends BaseController
             $modelPembayaraan->db->transRollback();
 
             return response()->setStatusCode(501)->setJSON(['errors' => $e->getMessage()]);
+        }
+    }
+
+    public function paymentContinue($kodePembayaran)
+    {
+        $modelPembayaraan = new Pembayaran();
+
+        $data = $modelPembayaraan->getPembayaran($kodePembayaran);
+
+        try {            
+            Transaction::cancel($kodePembayaran);
+
+            $newKodePembayaran = "TRX-" . date('Ymd') . rand('100', '999');
+            $modelPembayaraan->update($data['pembayaran_id'], [
+                'kode_pembayaran' => $newKodePembayaran
+            ]);
+
+            $transaction = [
+                'transaction_details' => [
+                    'order_id' => $newKodePembayaran,
+                    'gross_amount' => $data['subtotal']
+                ],
+                'customer_details' => [
+                    'first_name' => $data['nama'],
+                    'email' => $data['email'],
+                    'phone' => $data['noHp']
+                ],
+                "expiry" => [
+                    "unit" => "hours",
+                    "duration" => 6
+                ]
+            ];
+
+            $snap_token = Snap::getSnapToken($transaction);
+            return response()->setStatusCode(200)->setJSON([
+                'snap_token' => $snap_token, 
+            ]);          
+        } catch (\Exception $e) {
+            return response()->setStatusCode(200)->setJSON([
+                'message' => $e->getMessage(), 
+            ]);
         }
     }
 

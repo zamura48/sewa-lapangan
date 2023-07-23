@@ -91,7 +91,7 @@ class Jadwal extends Model
             ->join('jams', 'jadwals.id_jam = jams.jam_id')
             ->select('jadwals.jadwal_id, jams.jam, lapangans.nomor, lapangans.gambar, lapangans.status, jadwals.tanggal, jadwals.harga, jadwals.status_booking')
             ->where('jadwals.tanggal', $tanggal)
-            ->where('jams.jam Between "'.$jamMulai.'" and "'. $jamAkhir. '"')
+            ->where('jams.jam Between "' . $jamMulai . '" and "' . $jamAkhir . '"')
             ->where('jadwals.status_booking', 0)
             ->orderBy('lapangans.nomor', 'asc')
             ->find();
@@ -100,37 +100,28 @@ class Jadwal extends Model
     public function jadwalSelesai()
     {
         $dataJadwals = $this->join('jams', 'jadwals.id_jam = jams.jam_id', 'left')
-        ->join('bookings', 'jadwals.jadwal_id = bookings.id_jadwal', 'left')
-        ->join('pembayarans', 'pembayarans.id_booking = bookings.booking_id', 'left')
-        ->select('jadwals.jadwal_id, jadwals.id_lapangan, jams.jamAkhir, jadwals.tanggal, jadwals.status_booking, pembayarans.status')
-        ->where('jadwals.status_booking', 'Terboking')
-        ->find();
-        
+            ->join('bookings', 'jadwals.jadwal_id = bookings.id_jadwal', 'left')
+            ->join('pembayarans', 'pembayarans.id_booking = bookings.booking_id', 'left')
+            ->select('jadwals.jadwal_id, jadwals.id_lapangan, jams.jamAkhir, jadwals.tanggal, jadwals.status_booking, pembayarans.status')
+            ->where('jadwals.status_booking', 'Terboking')
+            ->find();
+
         foreach ($dataJadwals as $data) {
-            // if ($data['tanggal'] != date('Y-m-d')) {            
-                if ($data['jamAkhir'] < date('H:i')) {                    
-                    if ($data['status'] == 'Lunas') {
-                        $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
-                    } else {
-                        $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
-                    }
-                } 
-                // else {                    
-                    // if ($data['status'] == 'Lunas') {
-                    //     $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
-                    // } else {
-                    //     $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
-                    // }
-                // }
-            // }
-            
-            // if ($data['jamAkhir'] < date('H:i')) {
-            //     if ($data['status'] == 'Lunas') {
-            //         $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
-            //     } else {
-            //         $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
-            //     }
-            // }
+
+            $explode = explode(':', $data['jamAkhir']);
+            // dd($explode[0].':15');
+
+            if ($data['jamAkhir'] < date('H:i')) {
+                if ($data['status'] == 'Lunas') {
+                    $this->update($data['jadwal_id'], ['status_booking' => "Selesai"]);
+                } else {
+                    $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
+                }
+            }
+
+            if ($data['status'] == 'Cancel') {
+                $this->update($data['jadwal_id'], ['status_booking' => "Batal"]);
+            }
         }
     }
 }

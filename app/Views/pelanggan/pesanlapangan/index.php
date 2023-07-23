@@ -3,6 +3,50 @@
 <?= $this->section('content') ?>
 <div class="row justify-content-center mt-5 mb-5">
     <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <p class="fs-4 fw-bold text-black m-0">
+                    Lapangan yang sudah terbooking
+                </p>
+            </div>
+            <div class="card-body">
+                <table class="table text-center">
+                    <thead>
+                        <tr>
+                            <th>Lapangan</th>
+                            <th>Tanggal</th>
+                            <th>Jam</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if (!empty($lapangan_booked)) {
+                            foreach ($lapangan_booked as $item): ?>
+                                <tr>
+                                    <td>Lapangan
+                                        <?= $item['nomor'] ?>
+                                    </td>
+                                    <td>
+                                        <?= $item['tanggal'] ?>
+                                    </td>
+                                    <td>
+                                        <?= $item['jamMulai'] . ' - ' . $item['jamAkhir'] ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach;
+                        } else { ?>
+                        <tr>
+                            <td colspan="3" class="text-center">Belum ada booking</td>
+                            <td style="display:none"></td>
+                            <td style="display:none"></td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
         <div class="card animate__animated animate__fadeIn">
             <div class="card-body">
                 <form action="<?= base_url('pelanggan/pesan-lapangan') ?>" method="post" id="form">
@@ -100,6 +144,13 @@
 <?= $this->section('js') ?>
 <script>
     $(function () {
+        $('.table').dataTable({
+            searching: false,
+            info: false,
+            lengthChange: false,
+            order: [[1, 'desc']]
+        });
+
         var dtToday = new Date();
 
         /**
@@ -126,16 +177,16 @@
 
         let jam_mulai_split = jam_mulai.split(':');
 
-        $(this).val(jam_mulai_split[0]+':00');
+        $(this).val(jam_mulai_split[0] + ':00');
     });
-    
+
     $("[name=jamAkhir]").change(function (e) {
         e.preventDefault();
         jam_akhir = $(this).val();
 
         let jam_akhir_split = jam_akhir.split(':');
 
-        $(this).val(jam_akhir_split[0]+':00');
+        $(this).val(jam_akhir_split[0] + ':00');
     });
 
     // $("[name=jamAkhir]").change(function (e) {
