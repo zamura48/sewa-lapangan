@@ -117,6 +117,7 @@ class Pembayaran extends Model
     {
         $results = $this->select('kode_pembayaran, status, no_rek, payment_method')->find();
 
+        $status = false;
         foreach ($results as $result) {
             if ($result['status'] != 'Lunas' && $result['status'] != 'DP Terbayar' && $result['status'] != 'Cancel') {
                 $midtranStatus = Transaction::status($result['kode_pembayaran']);
@@ -139,8 +140,12 @@ class Pembayaran extends Model
                 $this->where('kode_pembayaran', $result['kode_pembayaran']);
                 $this->where('payment_type', null);
                 $this->update();
+                $status = true;
             }
+            $status = true;
         }
+
+        return $status;
     }
 
     public function cancelPayment($idBooking)

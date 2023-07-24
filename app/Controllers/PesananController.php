@@ -15,18 +15,6 @@ class PesananController extends BaseController
     {
         $this->model = new Booking();        
         $modelPembayaran = new Pembayaran();
-        
-        Config::$serverKey = getenv('midtrans.serverKey');
-        Config::$clientKey = getenv('midtrans.clientKey');
-        // Config::$isProduction = getenv('midtrans.isProduction');
-        Config::$isSanitized = getenv('midtrans.isSanitized');
-        Config::$is3ds = getenv('midtrans.is3ds');
-
-        try {
-            $modelPembayaran->perbaruiPembyaran();
-        } catch (\Throwable $th) {
-            $modelPembayaran->perbaruiPembyaran();
-        }
     }
 
     public function index()

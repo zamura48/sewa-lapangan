@@ -15,18 +15,6 @@ class HistoriController extends BaseController
     public function __construct()
     {
         $this->model = new Pembayaran();
-        
-        Config::$serverKey = getenv('midtrans.serverKey');
-        Config::$clientKey = getenv('midtrans.clientKey');
-        // Config::$isProduction = getenv('midtrans.isProduction');
-        Config::$isSanitized = getenv('midtrans.isSanitized');
-        Config::$is3ds = getenv('midtrans.is3ds');
-
-        try {
-            $this->model->perbaruiPembyaran();
-        } catch (\Throwable $th) {
-            $this->model->perbaruiPembyaran();
-        }
     }
 
     public function index()
