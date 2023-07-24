@@ -62,7 +62,6 @@ abstract class BaseController extends Controller
         date_default_timezone_set('Asia/Jakarta');
         
         $modelJadwalSelesai = new Jadwal();
-        $modelPembayaran = new Pembayaran();
         $modelJadwalSelesai->jadwalSelesai();        
         
         $this->validation = \Config\Services::validation();
@@ -72,12 +71,6 @@ abstract class BaseController extends Controller
         // Config::$isProduction = getenv('midtrans.isProduction');
         Config::$isSanitized = getenv('midtrans.isSanitized');
         Config::$is3ds = getenv('midtrans.is3ds');
-        
-        try {
-            $modelPembayaran->perbaruiPembyaran();
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
     }
 
     public function hargaPerjam($jamMulai, $jamAkhir, $harga)

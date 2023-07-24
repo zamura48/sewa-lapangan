@@ -140,14 +140,6 @@ class Pembayaran extends Model
                 $this->where('payment_type', null);
                 $this->update();
             }
-
-            if (empty($result['no_rek'])) {
-                $midtranStatus = Transaction::status($result['kode_pembayaran']);
-
-                $this->set(['no_rek' => $midtranStatus->transaction_time]);
-                $this->where('kode_pembayaran', $result['kode_pembayaran']);
-                $this->update();
-            }
         }
     }
 
