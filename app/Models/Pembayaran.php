@@ -115,7 +115,7 @@ class Pembayaran extends Model
 
     public function perbaruiPembyaran()
     {
-        $results = $this->select('kode_pembayaran, status, no_rek')->find();
+        $results = $this->select('kode_pembayaran, status, no_rek, payment_method')->find();
 
         foreach ($results as $result) {
             if ($result['status'] != 'Lunas' && $result['status'] != 'DP Terbayar' && $result['status'] != 'Cancel') {
