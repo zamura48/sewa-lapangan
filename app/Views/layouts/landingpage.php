@@ -7,11 +7,60 @@
         <p>Tempat gelanggang olahraga badminton jombang.</p>
     </div>
     <div class="col-md-6">
-        <img src="<?= ('mazer/assets/images/samples/2020-12-29.jpg') ?>" width="546" height="365" alt="" class="img-fluid rounded">
+        <img src="<?= ('mazer/assets/images/samples/2020-12-29.jpg') ?>" width="546" height="365" alt=""
+            class="img-fluid rounded">
     </div>
 </div>
 
 <div class="row mt-5">
+    <hr>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <p class="fs-4 fw-bold text-black m-0">
+                    Lapangan yang sudah terbooking
+                </p>
+            </div>
+            <div class="card-body">
+                <table class="table text-center">
+                    <thead>
+                        <tr>
+                            <th>Lapangan</th>
+                            <th>Tanggal</th>
+                            <th>Jam</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if (!empty($lapangan_booked)) {
+                            foreach ($lapangan_booked as $item): ?>
+                                <tr>
+                                    <td>Lapangan
+                                        <?= $item['nomor'] ?>
+                                    </td>
+                                    <td>
+                                        <?= $item['tanggal'] ?>
+                                    </td>
+                                    <td>
+                                        <?= $item['jamMulai'] . ' - ' . $item['jamAkhir'] ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach;
+                        } else { ?>
+                        <tr>
+                            <td colspan="3" class="text-center">Belum ada booking</td>
+                            <td style="display:none"></td>
+                            <td style="display:none"></td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
     <hr>
     <center>
         <p class="fs-4"><b>ALAMAT</b></p>
@@ -30,3 +79,16 @@
 </figure>
 
 <?= $this->endSection('content') ?>
+
+<?= $this->section('js') ?>
+<script>
+    $(document).ready(function () {
+        $('.table').dataTable({
+            searching: false,
+            info: false,
+            lengthChange: false,
+            order: [[1, 'desc']]
+        });
+    });
+</script>
+<?= $this->endSection('js') ?>

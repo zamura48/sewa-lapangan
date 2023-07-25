@@ -74,8 +74,10 @@ abstract class BaseController extends Controller
         Config::$is3ds = getenv('midtrans.is3ds');
         
         $status = false;
-        while ($status) {
-            $status = $modelPembayaran->perbaruiPembyaran();
+        try {
+            $modelPembayaran->perbaruiPembyaran();
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
 

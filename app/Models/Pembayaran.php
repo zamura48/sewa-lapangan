@@ -115,11 +115,12 @@ class Pembayaran extends Model
 
     public function perbaruiPembyaran()
     {
-        $results = $this->select('kode_pembayaran, status, no_rek, payment_method')->find();
+        $results = $this->select('pembayaran_id, kode_pembayaran, status, payment_method')->find();
 
         $status = false;
         foreach ($results as $result) {
-            if ($result['status'] != 'Lunas' && $result['status'] != 'DP Terbayar' && $result['status'] != 'Cancel') {
+            if ($result['status'] != 'Lunas' || $result['status'] != 'Cancel' || $result['status'] != 'DP Terbayar') {
+                
                 $midtranStatus = Transaction::status($result['kode_pembayaran']);
                 $transaction_status = '';
                 if ($midtranStatus->transaction_status == 'settlement') {
@@ -134,15 +135,11 @@ class Pembayaran extends Model
                     $transaction_status = 'Gagal';
                 } else {
                     $transaction_status = 'Cancel';
-                }
-
-                $this->set(['status' => $transaction_status]);
-                $this->where('kode_pembayaran', $result['kode_pembayaran']);
-                $this->where('payment_type', null);
-                $this->update();
-                $status = true;
+                }                
+                
+                $modal_pembayaran = new Pembayaran();
+                $modal_pembayaran->update($result['pembayaran_id'], ['status' => $transaction_status]);
             }
-            $status = true;
         }
 
         return $status;

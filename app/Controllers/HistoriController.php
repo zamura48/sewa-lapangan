@@ -15,6 +15,13 @@ class HistoriController extends BaseController
     public function __construct()
     {
         $this->model = new Pembayaran();
+
+        try {
+            //code...
+            $this->model->perbaruiPembyaran();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     public function index()
